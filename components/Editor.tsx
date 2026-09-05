@@ -3,7 +3,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { PRESET_HOOKS } from '@/lib/presets';
 import { PresetHook, PacingMetrics } from '@/lib/types';
-import { Sparkles, RotateCcw, Clock, Flame, Edit3 } from 'lucide-react';
+import { DailyUsageState } from '@/lib/usageLimit';
+import { Sparkles, RotateCcw, Clock, Flame, Edit3, Lock, Coffee } from 'lucide-react';
 
 interface EditorProps {
   script: string;
@@ -11,6 +12,7 @@ interface EditorProps {
   onEvaluate: () => void;
   isLoading: boolean;
   pacing: PacingMetrics;
+  usage?: DailyUsageState;
 }
 
 export const Editor: React.FC<EditorProps> = ({
@@ -19,69 +21,79 @@ export const Editor: React.FC<EditorProps> = ({
   onEvaluate,
   isLoading,
   pacing,
+  usage,
 }) => {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [isFocused, setIsFocused] = useState<boolean>(false);
+
+  const isLimitReached = !!usage?.isLimitReached;
 
   // Keyboard shortcut: Cmd/Ctrl + Enter
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
         e.preventDefault();
-        if (script.trim().length > 0 && !isLoading) {
+        if (script.trim().length > 0 && !isLoading && !isLimitReached) {
           onEvaluate();
         }
       }
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [script, isLoading, onEvaluate]);
+  }, [script, isLoading, isLimitReached, onEvaluate]);
 
   const handleSelectPreset = (preset: PresetHook) => {
     onChange(preset.script);
-    if (textareaRef.current) {
-      textareaRef.current.focus();
-    }
   };
 
   const handleClear = () => {
     onChange('');
-    if (textareaRef.current) {
-      textareaRef.current.focus();
-    }
+    textareaRef.current?.focus();
   };
-
-  // Pacing progress bar calculations (0 to 100% relative to a 60-word max gauge)
-  const maxBarWords = 65;
-  const wordPercent = Math.min(100, (pacing.wordCount / maxBarWords) * 100);
-
-  // Pacing status badge styling
-  const pacingBadge =
-    pacing.wordCount === 0
-      ? {
-          bg: 'bg-slate-100 text-slate-600 border-slate-200',
-          label: 'Awaiting Script (Target 30–45 words)',
-        }
-      : pacing.status === 'sweet_spot'
-      ? {
-          bg: 'bg-emerald-100 text-emerald-800 border-emerald-300',
-          label: '🎯 15s Sweet Spot (~30–45 words)',
-        }
-      : pacing.status === 'too_long'
-      ? {
-          bg: 'bg-rose-100 text-rose-800 border-rose-300',
-          label: '⚠️ Exceeds 15 Seconds (Cut filler)',
-        }
-      : {
-          bg: 'bg-amber-100 text-amber-800 border-amber-300',
-          label: '⏳ Too Brief (<18 words)',
-        };
 
   const isEmpty = script.trim().length === 0;
 
+  // 15-second sweet spot range (30 to 45 words)
+  const maxWordsForGauge = 65;
+  const progressPercent = Math.min(
+    100,
+    Math.round((pacing.wordCount / maxWordsForGauge) * 100)
+  );
+
+  const sweetSpotStartPercent = Math.round((30 / maxWordsForGauge) * 100); // ~46%
+  const sweetSpotEndPercent = Math.round((45 / maxWordsForGauge) * 100); // ~69%
+  const sweetSpotWidthPercent = sweetSpotEndPercent - sweetSpotStartPercent; // ~23%
+
+  const getPacingBadge = () => {
+    if (isEmpty) {
+      return {
+        label: 'Awaiting Script (Target 30–45 words)',
+        bg: 'bg-slate-100 text-slate-600 border-slate-200',
+      };
+    }
+    if (pacing.status === 'sweet_spot') {
+      return {
+        label: '✨ Optimal 15s Sweet Spot',
+        bg: 'bg-emerald-100 text-emerald-800 border-emerald-300 font-black',
+      };
+    }
+    if (pacing.wordCount < 30) {
+      return {
+        label: 'Too Brief for 15s',
+        bg: 'bg-amber-100 text-amber-800 border-amber-300',
+      };
+    }
+    return {
+      label: 'Exceeds 15s Cliff',
+      bg: 'bg-rose-100 text-rose-800 border-rose-300',
+    };
+  };
+
+  const pacingBadge = getPacingBadge();
+
   return (
     <div className="flex flex-col h-full bg-white rounded-3xl border border-[#EFE5DB] shadow-candy-sm p-5 sm:p-7 gap-5">
-      {/* 1. TOP: Clear Header with Typing Prompt */}
+      {/* 1. Editor Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <div className="w-8 h-8 rounded-xl bg-pink-100 text-pink-600 flex items-center justify-center text-sm font-black shadow-2xs">
@@ -165,26 +177,29 @@ Example:
           {/* Moving progress fill */}
           <div
             className={`h-full rounded-full transition-all duration-300 ${
-              pacing.wordCount === 0
+              isEmpty
                 ? 'bg-transparent'
                 : pacing.status === 'sweet_spot'
-                ? 'bg-gradient-to-r from-teal-500 to-emerald-500 shadow-sm'
-                : pacing.status === 'too_long'
-                ? 'bg-gradient-to-r from-rose-500 to-red-600'
-                : 'bg-gradient-to-r from-amber-400 to-amber-500'
+                ? 'bg-gradient-to-r from-emerald-400 to-emerald-500 shadow-sm'
+                : pacing.wordCount < 30
+                ? 'bg-gradient-to-r from-amber-400 to-amber-500'
+                : 'bg-gradient-to-r from-rose-400 to-pink-500'
             }`}
-            style={{ width: `${wordPercent}%` }}
+            style={{ width: `${progressPercent}%` }}
           />
 
-          {/* Target 15s Sweet Spot Zone Overlay (Subtle 1px light grey dashed boundaries with soft tint) */}
+          {/* 15s Sweet Spot Zone (30–45 words) with subtle 1px dashed markers */}
           <div
             className="absolute top-0 bottom-0 border-x border-dashed border-slate-300 bg-emerald-400/20 pointer-events-none z-10"
-            style={{ left: '46%', width: '23%' }}
+            style={{
+              left: `${sweetSpotStartPercent}%`,
+              width: `${sweetSpotWidthPercent}%`,
+            }}
             title="15s Sweet Spot Zone (30 to 45 words)"
           />
         </div>
 
-        {/* Range markers below the bar */}
+        {/* Pacing Guidance Labels */}
         <div className="flex items-center justify-between text-[10px] font-bold text-slate-400 px-0.5 -mt-0.5">
           <span>0w (0s)</span>
           <span className="text-emerald-700 font-extrabold bg-emerald-50/90 px-1.5 py-0.5 rounded border border-emerald-200 flex items-center gap-1">
@@ -198,25 +213,48 @@ Example:
         </p>
       </div>
 
-      {/* 4. Primary Action Button */}
+      {/* 4. Primary Action Button with Daily Free Quota Display */}
       <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-1">
-        <div className="text-xs text-slate-400 font-medium flex items-center gap-1.5">
-          <kbd className="px-1.5 py-0.5 bg-slate-100 border border-slate-300 rounded text-[10px] font-mono text-slate-600">
-            Ctrl
-          </kbd>
-          <span>+</span>
-          <kbd className="px-1.5 py-0.5 bg-slate-100 border border-slate-300 rounded text-[10px] font-mono text-slate-600">
-            Enter
-          </kbd>
-          <span>to test hook</span>
+        {/* Left: Keyboard shortcut & Daily Counter Chip */}
+        <div className="flex items-center gap-2.5 flex-wrap">
+          <div className="text-xs text-slate-400 font-medium flex items-center gap-1.5">
+            <kbd className="px-1.5 py-0.5 bg-slate-100 border border-slate-300 rounded text-[10px] font-mono text-slate-600">
+              Ctrl
+            </kbd>
+            <span>+</span>
+            <kbd className="px-1.5 py-0.5 bg-slate-100 border border-slate-300 rounded text-[10px] font-mono text-slate-600">
+              Enter
+            </kbd>
+            <span className="hidden sm:inline">to test</span>
+          </div>
+
+          {/* Daily Usage Counter Badge */}
+          {usage && (
+            <span
+              className={`inline-flex items-center gap-1 text-[11px] font-bold px-2.5 py-0.5 rounded-full border transition-all ${
+                usage.remaining >= 3
+                  ? 'bg-emerald-50 text-emerald-800 border-emerald-200'
+                  : usage.remaining > 0
+                  ? 'bg-amber-50 text-amber-800 border-amber-200'
+                  : 'bg-rose-50 text-rose-800 border-rose-200'
+              }`}
+              title={`${usage.used} of ${usage.max} free tests used today. Resets at midnight.`}
+            >
+              <span>{isLimitReached ? '🔒' : '🎯'}</span>
+              <span>
+                {usage.remaining} / {usage.max} free tests today
+              </span>
+            </span>
+          )}
         </div>
 
+        {/* Action Button */}
         <button
           onClick={onEvaluate}
-          disabled={isLoading || isEmpty}
+          disabled={isLoading || isEmpty || isLimitReached}
           type="button"
           className={`w-full sm:w-auto px-7 py-3.5 rounded-2xl font-black text-sm text-white flex items-center justify-center gap-2 transition-all transform active:scale-95 shadow-candy ${
-            isLoading || isEmpty
+            isLoading || isEmpty || isLimitReached
               ? 'bg-slate-300 cursor-not-allowed opacity-70'
               : 'bg-gradient-to-r from-pink-500 via-rose-500 to-amber-500 hover:opacity-95 hover:shadow-candy-pink-glow'
           }`}
@@ -226,6 +264,11 @@ Example:
               <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
               <span>Analyzing Hook...</span>
             </>
+          ) : isLimitReached ? (
+            <>
+              <Lock className="w-4 h-4" />
+              <span>Daily Limit Reached (0/{usage?.max || 5})</span>
+            </>
           ) : (
             <>
               <Flame className="w-4 h-4 fill-current" />
@@ -234,6 +277,32 @@ Example:
           )}
         </button>
       </div>
+
+      {/* 4b. Friendly Daily Limit Alert Banner when 0 remaining */}
+      {isLimitReached && (
+        <div className="w-full p-4 rounded-2xl bg-gradient-to-r from-amber-50 via-rose-50 to-pink-50 border border-amber-200 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs shadow-xs animate-fade-in">
+          <div className="flex items-center gap-2.5 text-slate-700">
+            <span className="text-2xl">☕</span>
+            <div>
+              <span className="font-black text-slate-800 block text-xs">
+                You've used all 5 free evaluations for today!
+              </span>
+              <span className="text-[11px] text-slate-500 font-medium">
+                Your quota resets at midnight. Enjoying Viral Hook Studio? Support us on Buy Me a Coffee to help keep community servers fast & free.
+              </span>
+            </div>
+          </div>
+          <a
+            href="https://buymeacoffee.com/geraltofrivia"
+            target="_blank"
+            rel="noreferrer"
+            className="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-600 text-white font-black text-xs flex items-center gap-1.5 transition-all shadow-xs flex-shrink-0"
+          >
+            <span>Support with a Coffee</span>
+            <Coffee className="w-3.5 h-3.5" />
+          </a>
+        </div>
+      )}
 
       {/* 5. BOTTOM: Preset Hook Samples Below Button */}
       <div className="border-t border-[#F4ECE4] pt-4 flex flex-col gap-2">
@@ -258,7 +327,7 @@ Example:
                 <span>{preset.title}</span>
                 <span
                   className={`ml-1.5 text-[10px] opacity-80 ${
-                    isSelected ? 'text-white' : 'text-slate-500'
+                    isSelected ? 'text-pink-100' : 'text-slate-500'
                   }`}
                 >
                   ({preset.tag})

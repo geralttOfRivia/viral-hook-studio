@@ -15,6 +15,7 @@ import { SupportModal } from '@/components/SupportModal';
 import { PRESET_HOOKS } from '@/lib/presets';
 import { PvssEvaluationResult, PacingMetrics } from '@/lib/types';
 import { calculatePacing } from '@/lib/evaluator';
+import { getDailyUsage, incrementDailyUsage, DailyUsageState } from '@/lib/usageLimit';
 import { AlertCircle, Coffee, BookOpen } from 'lucide-react';
 
 export default function HomePage() {
@@ -22,6 +23,11 @@ export default function HomePage() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [evaluation, setEvaluation] = useState<PvssEvaluationResult | null>(null);
+  const [usage, setUsage] = useState<DailyUsageState>(() => getDailyUsage());
+
+  React.useEffect(() => {
+    setUsage(getDailyUsage());
+  }, []);
 
   // Modals state
   const [isGuideOpen, setIsGuideOpen] = useState<boolean>(false);
@@ -42,6 +48,11 @@ export default function HomePage() {
       return;
     }
 
+    if (usage.isLimitReached) {
+      setError("You have reached today's 5 free evaluations. Your quota resets at midnight!");
+      return;
+    }
+
     setIsLoading(true);
     setError(null);
 
@@ -57,17 +68,22 @@ export default function HomePage() {
       const data = await res.json();
 
       if (!res.ok) {
+        if (res.status === 429) {
+          setUsage(getDailyUsage());
+        }
         throw new Error(data.error || `Server error (${res.status})`);
       }
 
       setEvaluation(data as PvssEvaluationResult);
+      // Decrement daily free quota on success
+      setUsage(incrementDailyUsage());
     } catch (err: any) {
       console.error('Evaluation failed:', err);
       setError(err?.message || 'Failed to evaluate hook. Please try again.');
     } finally {
       setIsLoading(false);
     }
-  }, [script]);
+  }, [script, usage.isLimitReached]);
 
   const currentScore = evaluation?.overallScore ?? 0;
   const currentGrade = evaluation?.grade ?? (isLoading ? 'Evaluating...' : 'Ready to Test 🎯');
@@ -123,6 +139,7 @@ export default function HomePage() {
               onEvaluate={runEvaluation}
               isLoading={isLoading}
               pacing={pacing}
+              usage={usage}
             />
           </div>
 
