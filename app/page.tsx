@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useRef } from 'react';
 import { Header } from '@/components/Header';
 import { OnboardingBar } from '@/components/OnboardingBar';
 import { Editor } from '@/components/Editor';
@@ -24,7 +24,11 @@ export default function HomePage() {
   const [error, setError] = useState<string | null>(null);
   const [evaluation, setEvaluation] = useState<PvssEvaluationResult | null>(null);
   const [usage, setUsage] = useState<DailyUsageState>(() => getDailyUsage());
+  const [isEditorCollapsed, setIsEditorCollapsed] = useState<boolean>(false);
 
+  const resultsRef = useRef<HTMLDivElement>(null);
+
+  // Refresh client usage on mount to ensure accurate hydration
   React.useEffect(() => {
     setUsage(getDailyUsage());
   }, []);
@@ -39,6 +43,9 @@ export default function HomePage() {
   const handleScriptChange = (newScript: string) => {
     setScript(newScript);
     setPacing(calculatePacing(newScript));
+    if (newScript.trim() === '') {
+      setIsEditorCollapsed(false);
+    }
     if (error) setError(null);
   };
 
@@ -75,8 +82,15 @@ export default function HomePage() {
       }
 
       setEvaluation(data as PvssEvaluationResult);
+      // Auto-collapse script editor so results & director notes are instantly in view
+      setIsEditorCollapsed(true);
       // Decrement daily free quota on success
       setUsage(incrementDailyUsage());
+
+      // Smoothly scroll to results dashboard
+      setTimeout(() => {
+        resultsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 150);
     } catch (err: any) {
       console.error('Evaluation failed:', err);
       setError(err?.message || 'Failed to evaluate hook. Please try again.');
@@ -106,7 +120,7 @@ export default function HomePage() {
         {/* Clean 3-Step Quick Onboarding Bar */}
         <OnboardingBar onOpenGuide={() => setIsGuideOpen(true)} />
 
-        {/* Error Alert if any */}
+        {/* Global Error Banner */}
         {error && (
           <div className="rounded-2xl bg-rose-50 border border-rose-200 p-4 flex items-center gap-3 text-rose-800 text-xs font-semibold">
             <AlertCircle className="w-5 h-5 text-rose-500 flex-shrink-0" />
@@ -129,10 +143,11 @@ export default function HomePage() {
           </div>
         )}
 
-        {/* Notion-Style Split Layout: Editor on Left, Smart Sidebar on Right */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-          {/* LEFT AREA: Clean Distraction-free Script Editor (7 cols) */}
-          <div className="lg:col-span-7 flex flex-col">
+        {/* Script Editor Section (Full-width when collapsed, or 7-col when in initial state) */}
+        {evaluation ? (
+          /* POST-EVALUATION LAYOUT: Collapsible Editor Bar on Top */
+          <div ref={resultsRef} className="flex flex-col gap-6">
+            {/* 1. Compact Collapsible Script Bar */}
             <Editor
               script={script}
               onChange={handleScriptChange}
@@ -140,60 +155,109 @@ export default function HomePage() {
               isLoading={isLoading}
               pacing={pacing}
               usage={usage}
+              isCollapsed={isEditorCollapsed}
+              onToggleCollapse={() => setIsEditorCollapsed(!isEditorCollapsed)}
             />
-          </div>
 
-          {/* RIGHT AREA: Dynamic Candy Pop Smart Sidebar (5 cols) */}
-          <div className="lg:col-span-5 flex flex-col gap-6">
-            {/* 3D Hype Meter Card */}
-            <div className="bg-white rounded-3xl border border-[#EFE5DB] shadow-candy-sm overflow-hidden">
-              <div className="border-b border-[#F4ECE4] px-6 py-4 flex items-center justify-between bg-gradient-to-r from-white via-white to-pink-50/30">
-                <div className="flex items-center gap-2">
-                  <span className="text-lg">🍭</span>
-                  <span className="font-black text-sm text-slate-800 tracking-tight">
-                    The Hype Meter
-                  </span>
+            {/* 2. Hero Insights Row: Hype Meter on Left, Director's Notes on Right (Zero Scrolling Required!) */}
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+              {/* Left Column (5 cols): The Hype Meter Gauge */}
+              <div className="lg:col-span-5 flex flex-col gap-6">
+                <div className="bg-white rounded-3xl border border-[#EFE5DB] shadow-candy-sm overflow-hidden">
+                  <div className="border-b border-[#F4ECE4] px-6 py-4 flex items-center justify-between bg-gradient-to-r from-white via-white to-pink-50/30">
+                    <div className="flex items-center gap-2">
+                      <span className="text-lg">🍭</span>
+                      <span className="font-black text-sm text-slate-800 tracking-tight">
+                        The Hype Meter
+                      </span>
+                    </div>
+                    <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
+                      0–100 Scale
+                    </span>
+                  </div>
+
+                  <HypeMeterRing
+                    score={currentScore}
+                    grade={currentGrade}
+                    verdict={currentVerdict}
+                    isLoading={isLoading}
+                  />
                 </div>
-                <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
-                  0–100 Scale
-                </span>
               </div>
 
-              <HypeMeterRing
-                score={currentScore}
-                grade={currentGrade}
-                verdict={currentVerdict}
+              {/* Right Column (7 cols): Director's Notes & Actionables Front-and-Center */}
+              <div className="lg:col-span-7 flex flex-col">
+                <div className="bg-white rounded-3xl border border-[#EFE5DB] shadow-candy-sm p-5 sm:p-6 flex flex-col gap-4">
+                  <div className="flex items-center justify-between border-b border-[#F4ECE4] pb-3">
+                    <div className="flex items-center gap-2">
+                      <span className="text-lg">💡</span>
+                      <div>
+                        <h3 className="text-sm sm:text-base font-black text-slate-800 tracking-tight">
+                          Director's Actionable Notes
+                        </h3>
+                        <p className="text-[11px] text-slate-400 font-medium">
+                          Click any point to view retention psychology & rewrite formula
+                        </p>
+                      </div>
+                    </div>
+                    <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-pink-100 text-pink-700">
+                      Interactive
+                    </span>
+                  </div>
+
+                  <CritiqueList
+                    strengths={evaluation.critique.strengths}
+                    improvements={evaluation.critique.improvements}
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* 3. PVSS Pillar Breakdown Cards with Interactive Drilldowns */}
+            <div className="bg-white rounded-3xl border border-[#EFE5DB] shadow-candy-sm p-6 flex flex-col gap-4">
+              <PvssBreakdown pillars={evaluation.pillars} />
+            </div>
+          </div>
+        ) : (
+          /* INITIAL STATE LAYOUT (Editor on Left, Waiting Gauge on Right) */
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+            {/* LEFT AREA: Full Distraction-free Script Editor (7 cols) */}
+            <div className="lg:col-span-7 flex flex-col">
+              <Editor
+                script={script}
+                onChange={handleScriptChange}
+                onEvaluate={runEvaluation}
                 isLoading={isLoading}
+                pacing={pacing}
+                usage={usage}
               />
             </div>
 
-            {/* PVSS Pillar Breakdown Cards (only when evaluation exists) */}
-            {evaluation && (
-              <div className="bg-white rounded-3xl border border-[#EFE5DB] shadow-candy-sm p-6 flex flex-col gap-4">
-                <PvssBreakdown pillars={evaluation.pillars} />
-              </div>
-            )}
-
-            {/* Bulleted Critique (only when evaluation exists) */}
-            {evaluation && (
-              <div className="bg-white rounded-3xl border border-[#EFE5DB] shadow-candy-sm p-6 flex flex-col gap-4">
-                <div className="flex items-center justify-between">
-                  <h3 className="text-sm font-black text-slate-800 tracking-tight flex items-center gap-1.5">
-                    <span>💡 Director's Notes</span>
-                  </h3>
-                  <span className="text-[11px] font-semibold text-slate-400">
-                    Retention Diagnostics
+            {/* RIGHT AREA: Welcoming Waiting Sidebar (5 cols) */}
+            <div className="lg:col-span-5 flex flex-col gap-6">
+              {/* 3D Hype Meter Card */}
+              <div className="bg-white rounded-3xl border border-[#EFE5DB] shadow-candy-sm overflow-hidden">
+                <div className="border-b border-[#F4ECE4] px-6 py-4 flex items-center justify-between bg-gradient-to-r from-white via-white to-pink-50/30">
+                  <div className="flex items-center gap-2">
+                    <span className="text-lg">🍭</span>
+                    <span className="font-black text-sm text-slate-800 tracking-tight">
+                      The Hype Meter
+                    </span>
+                  </div>
+                  <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
+                    0–100 Scale
                   </span>
                 </div>
-                <CritiqueList
-                  strengths={evaluation.critique.strengths}
-                  improvements={evaluation.critique.improvements}
+
+                <HypeMeterRing
+                  score={currentScore}
+                  grade={currentGrade}
+                  verdict={currentVerdict}
+                  isLoading={isLoading}
                 />
               </div>
-            )}
 
-            {/* When no evaluation yet, show clean welcoming guidance */}
-            {!evaluation && !isLoading && (
+              {/* Welcoming Guidance Card */}
               <div className="bg-white rounded-3xl border border-[#EFE5DB] shadow-candy-sm p-6 flex flex-col items-center text-center gap-3">
                 <div className="w-10 h-10 rounded-2xl bg-pink-50 text-pink-500 flex items-center justify-center text-lg">
                   ✨
@@ -213,9 +277,9 @@ export default function HomePage() {
                   Read the 15-second PVSS guide &rarr;
                 </button>
               </div>
-            )}
+            </div>
           </div>
-        </div>
+        )}
 
         {/* Minimal Bottom Telemetry (Only after test) */}
         {evaluation?.tokenUsage && (

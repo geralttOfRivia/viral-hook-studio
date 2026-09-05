@@ -32,7 +32,7 @@ export const AFFILIATE_PARTNERS: AffiliatePartner[] = [
     headline: 'Epidemic Sound • 30-Day Free Pass',
     description: 'Elevate your 15-second hook with cinematic whooshes, risers, and 40,000+ royalty-free tracks.',
     cta: 'Claim 30-Day Pass',
-    url: 'https://www.epidemicsound.com', // Replace with your Epidemic Sound referral link
+    url: 'https://share.epidemicsound.com/ztzj1j',
     iconName: 'Headphones',
     accentColor: {
       bg: 'bg-rose-50/50',
@@ -50,7 +50,7 @@ export const AFFILIATE_PARTNERS: AffiliatePartner[] = [
     headline: 'vidIQ • Free YouTube Growth Suite',
     description: 'Match your viral intro with high-CTR title predictions and competitor retention analytics.',
     cta: 'Try vidIQ Free',
-    url: 'https://vidiq.com', // Replace with your vidIQ affiliate link
+    url: 'https://vidiq.com/geraltofrivia',
     iconName: 'TrendingUp',
     accentColor: {
       bg: 'bg-indigo-50/50',
@@ -68,7 +68,7 @@ export const AFFILIATE_PARTNERS: AffiliatePartner[] = [
     headline: 'ElevenLabs • Studio Voiceover AI',
     description: 'Test pacing, tone, and spoken rhythm for your hook script before recording in front of the camera.',
     cta: 'Generate Free Audio',
-    url: 'https://elevenlabs.io', // Replace with your ElevenLabs affiliate link
+    url: 'https://try.elevenlabs.io/dz43dlvcg8d7',
     iconName: 'Mic',
     accentColor: {
       bg: 'bg-emerald-50/50',
@@ -86,7 +86,7 @@ export const AFFILIATE_PARTNERS: AffiliatePartner[] = [
     headline: 'Descript • Edit Video Like a Doc',
     description: 'Eliminate pauses, "ums", and filler words in your opening 15 seconds with 1-click text trimming.',
     cta: 'Edit First 15s Free',
-    url: 'https://www.descript.com', // Replace with your Descript affiliate link
+    url: 'https://descript.cello.so/hJR0tMHohq5',
     iconName: 'Film',
     accentColor: {
       bg: 'bg-amber-50/50',
@@ -97,22 +97,22 @@ export const AFFILIATE_PARTNERS: AffiliatePartner[] = [
       btnHover: 'hover:bg-amber-50',
     },
   },
-  {
-    id: 'opus-clip',
-    name: 'Opus Clip',
-    category: 'Viral Shorts Repurposing',
-    headline: 'Opus Clip • 1 Long Video → 10 Viral Shorts',
-    description: 'Auto-detect high-retention hooks in your long videos and reformat them into viral YouTube Shorts.',
-    cta: 'Create Viral Clips',
-    url: 'https://www.opus.pro', // Replace with your Opus Clip affiliate link
-    iconName: 'Video',
-    accentColor: {
-      bg: 'bg-purple-50/50',
-      border: 'border-purple-100',
-      text: 'text-purple-600',
-      badgeBg: 'bg-purple-100/80',
-      badgeText: 'text-purple-800',
-      btnHover: 'hover:bg-purple-50',
-    },
-  },
+  // {
+  //   id: 'opus-clip',
+  //   name: 'Opus Clip',
+  //   category: 'Viral Shorts Repurposing',
+  //   headline: 'Opus Clip • 1 Long Video → 10 Viral Shorts',
+  //   description: 'Auto-detect high-retention hooks in your long videos and reformat them into viral YouTube Shorts.',
+  //   cta: 'Create Viral Clips',
+  //   url: 'https://www.opus.pro', // Replace with your Opus Clip affiliate link
+  //   iconName: 'Video',
+  //   accentColor: {
+  //     bg: 'bg-purple-50/50',
+  //     border: 'border-purple-100',
+  //     text: 'text-purple-600',
+  //     badgeBg: 'bg-purple-100/80',
+  //     badgeText: 'text-purple-800',
+  //     btnHover: 'hover:bg-purple-50',
+  //   },
+  // },
 ];

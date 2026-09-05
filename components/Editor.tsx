@@ -4,7 +4,18 @@ import React, { useEffect, useRef, useState } from 'react';
 import { PRESET_HOOKS } from '@/lib/presets';
 import { PresetHook, PacingMetrics } from '@/lib/types';
 import { DailyUsageState } from '@/lib/usageLimit';
-import { Sparkles, RotateCcw, Clock, Flame, Edit3, Lock, Coffee } from 'lucide-react';
+import {
+  Sparkles,
+  RotateCcw,
+  Clock,
+  Flame,
+  Edit3,
+  Lock,
+  Coffee,
+  ChevronDown,
+  ChevronUp,
+  Mail,
+} from 'lucide-react';
 
 interface EditorProps {
   script: string;
@@ -13,6 +24,8 @@ interface EditorProps {
   isLoading: boolean;
   pacing: PacingMetrics;
   usage?: DailyUsageState;
+  isCollapsed?: boolean;
+  onToggleCollapse?: () => void;
 }
 
 export const Editor: React.FC<EditorProps> = ({
@@ -22,6 +35,8 @@ export const Editor: React.FC<EditorProps> = ({
   isLoading,
   pacing,
   usage,
+  isCollapsed = false,
+  onToggleCollapse,
 }) => {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [isFocused, setIsFocused] = useState<boolean>(false);
@@ -91,6 +106,50 @@ export const Editor: React.FC<EditorProps> = ({
 
   const pacingBadge = getPacingBadge();
 
+  // COLLAPSED SUMMARY VIEW (When results are active to eliminate scrolling)
+  if (isCollapsed && onToggleCollapse) {
+    return (
+      <div className="w-full bg-white rounded-3xl border border-[#EFE5DB] shadow-candy-sm p-4 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 transition-all hover:border-pink-200">
+        <div className="flex items-center gap-3 min-w-0 flex-1">
+          <div className="w-10 h-10 rounded-2xl bg-pink-100 text-pink-600 flex items-center justify-center font-black text-base shadow-2xs flex-shrink-0">
+            ✍️
+          </div>
+          <div className="min-w-0 flex-1">
+            <div className="flex items-center gap-2 mb-0.5 flex-wrap">
+              <span className="text-[10px] font-black uppercase tracking-wider text-slate-400">
+                Tested Intro Script
+              </span>
+              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200">
+                {pacing.wordCount} words • ~{pacing.estimatedSeconds}s spoken
+              </span>
+              {usage && (
+                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 border border-slate-200">
+                  {usage.remaining}/{usage.max} tests left today
+                </span>
+              )}
+            </div>
+            <p className="text-xs font-bold text-slate-800 truncate">
+              &ldquo;{script}&rdquo;
+            </p>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-2 flex-shrink-0 w-full sm:w-auto justify-end">
+          <button
+            type="button"
+            onClick={onToggleCollapse}
+            className="w-full sm:w-auto px-4 py-2 rounded-2xl text-xs font-black text-pink-600 hover:text-pink-700 bg-pink-50 hover:bg-pink-100/80 border border-pink-200 shadow-2xs flex items-center justify-center gap-1.5 transition-all active:scale-95"
+          >
+            <Edit3 className="w-3.5 h-3.5" />
+            <span>Edit Script & Re-Test</span>
+            <ChevronDown className="w-3.5 h-3.5" />
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  // EXPANDED FULL SCRIPT EDITOR
   return (
     <div className="flex flex-col h-full bg-white rounded-3xl border border-[#EFE5DB] shadow-candy-sm p-5 sm:p-7 gap-5">
       {/* 1. Editor Header */}
@@ -109,17 +168,31 @@ export const Editor: React.FC<EditorProps> = ({
           </div>
         </div>
 
-        {!isEmpty && (
-          <button
-            onClick={handleClear}
-            type="button"
-            className="p-1.5 px-2.5 rounded-xl text-slate-400 hover:text-slate-600 hover:bg-slate-100 text-xs font-semibold flex items-center gap-1 transition-all"
-            title="Clear text"
-          >
-            <RotateCcw className="w-3.5 h-3.5" />
-            <span>Reset</span>
-          </button>
-        )}
+        <div className="flex items-center gap-1.5">
+          {onToggleCollapse && !isEmpty && (
+            <button
+              onClick={onToggleCollapse}
+              type="button"
+              className="p-1.5 px-2.5 rounded-xl text-slate-500 hover:text-slate-800 hover:bg-slate-100 text-xs font-semibold flex items-center gap-1 transition-all"
+              title="Minimize editor"
+            >
+              <ChevronUp className="w-3.5 h-3.5" />
+              <span>Hide</span>
+            </button>
+          )}
+
+          {!isEmpty && (
+            <button
+              onClick={handleClear}
+              type="button"
+              className="p-1.5 px-2.5 rounded-xl text-slate-400 hover:text-slate-600 hover:bg-slate-100 text-xs font-semibold flex items-center gap-1 transition-all"
+              title="Clear text"
+            >
+              <RotateCcw className="w-3.5 h-3.5" />
+              <span>Reset</span>
+            </button>
+          )}
+        </div>
       </div>
 
       {/* 2. Prominent High-Contrast Textarea Container */}
@@ -278,29 +351,39 @@ Example:
         </button>
       </div>
 
-      {/* 4b. Friendly Daily Limit Alert Banner when 0 remaining */}
+      {/* 4b. Friendly Daily Limit Alert Banner with Contact / Higher Limit Option */}
       {isLimitReached && (
-        <div className="w-full p-4 rounded-2xl bg-gradient-to-r from-amber-50 via-rose-50 to-pink-50 border border-amber-200 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs shadow-xs animate-fade-in">
-          <div className="flex items-center gap-2.5 text-slate-700">
-            <span className="text-2xl">☕</span>
+        <div className="w-full p-4 rounded-2xl bg-gradient-to-r from-amber-50 via-rose-50 to-pink-50 border border-amber-200 flex flex-col md:flex-row items-start md:items-center justify-between gap-3 text-xs shadow-xs animate-fade-in">
+          <div className="flex items-start gap-2.5 text-slate-700">
+            <span className="text-2xl mt-0.5">☕</span>
             <div>
               <span className="font-black text-slate-800 block text-xs">
-                You've used all 5 free evaluations for today!
+                You've reached today's 5 free evaluations!
               </span>
-              <span className="text-[11px] text-slate-500 font-medium">
-                Your quota resets at midnight. Enjoying Viral Hook Studio? Support us on Buy Me a Coffee to help keep community servers fast & free.
+              <span className="text-[11px] text-slate-500 font-medium leading-relaxed block mt-0.5">
+                Resets at midnight. Need higher limits for your channel or production team? Reach out directly or tip on Buy Me a Coffee to expand servers!
               </span>
             </div>
           </div>
-          <a
-            href="https://buymeacoffee.com/geraltofrivia"
-            target="_blank"
-            rel="noreferrer"
-            className="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-600 text-white font-black text-xs flex items-center gap-1.5 transition-all shadow-xs flex-shrink-0"
-          >
-            <span>Support with a Coffee</span>
-            <Coffee className="w-3.5 h-3.5" />
-          </a>
+
+          <div className="flex items-center gap-2 flex-shrink-0 w-full md:w-auto justify-end flex-wrap pt-2 md:pt-0 border-t md:border-t-0 border-amber-200/60">
+            <a
+              href="mailto:geralttofrivia@zohomail.in?subject=Viral%20Hook%20Studio%20-%20Higher%20Limit%20Request"
+              className="px-3.5 py-2 rounded-xl bg-white hover:bg-slate-100 text-slate-700 font-bold text-xs border border-slate-300 shadow-2xs flex items-center gap-1.5 transition-all"
+            >
+              <Mail className="w-3.5 h-3.5 text-slate-500" />
+              <span>Request Higher Limit</span>
+            </a>
+            <a
+              href="https://buymeacoffee.com/geraltofrivia"
+              target="_blank"
+              rel="noreferrer"
+              className="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-600 text-white font-black text-xs flex items-center gap-1.5 transition-all shadow-xs"
+            >
+              <span>Buy Me a Coffee</span>
+              <Coffee className="w-3.5 h-3.5" />
+            </a>
+          </div>
         </div>
       )}
 
