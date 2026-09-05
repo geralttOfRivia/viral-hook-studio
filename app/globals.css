@@ -1,0 +1,87 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg-candy: #FAF8F5;
+  --bubble-pink: #FF5E8E;
+  --bubble-mint: #10B981;
+  --bubble-yellow: #F59E0B;
+}
+
+/* Candy Pop Custom Cursors */
+html, body {
+  background-color: #FAF8F5;
+  color: #1E293B;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  overflow-x: hidden;
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 28 28' fill='none'%3E%3Cpath d='M4 4L12.5 24L16.2 16.2L24 12.5L4 4Z' fill='%23FF3366' stroke='white' stroke-width='2.5' stroke-linejoin='round'/%3E%3C/svg%3E") 4 4, auto;
+}
+
+/* Clickable / Pointer Elements: Pink Arrow + Gold Sparkle Star */
+button,
+a,
+[role="button"],
+input[type="button"],
+input[type="submit"],
+.cursor-pointer {
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32' fill='none'%3E%3Cpath d='M5 5L13.5 25L17.5 17.5L25 13.5L5 5Z' fill='%23FF2A6D' stroke='white' stroke-width='2.5' stroke-linejoin='round'/%3E%3Cpath d='M22 3L23.2 6.8L27 8L23.2 9.2L22 13L20.8 9.2L17 8L20.8 6.8L22 3Z' fill='%23FBBF24' stroke='white' stroke-width='1'/%3E%3C/svg%3E") 5 5, pointer;
+}
+
+/* Text Inputs / Textarea: Candy Pink I-Beam + Pink Caret */
+textarea,
+input[type="text"],
+input[type="search"],
+[contenteditable="true"] {
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none'%3E%3Cpath d='M7 4H17M12 4V20M7 20H17' stroke='%23FF2A6D' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3Ccircle cx='12' cy='4' r='2' fill='%23F59E0B'/%3E%3Ccircle cx='12' cy='20' r='2' fill='%2310B981'/%3E%3C/svg%3E") 12 12, text;
+  caret-color: #FF2A6D;
+}
+
+/* Candy Pop 3D Depth Card Effect */
+.candy-card-3d {
+  background: #FFFFFF;
+  border-radius: 1.5rem;
+  border: 1.5px solid #F1E7DD;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.04), 0 4px 6px -2px rgba(0, 0, 0, 0.02);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.candy-card-3d:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 16px 30px -8px rgba(0, 0, 0, 0.07), 0 8px 12px -4px rgba(0, 0, 0, 0.03);
+}
+
+/* Pulsing and glow keyframes */
+@keyframes candy-pulse {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 0 25px 5px rgba(255, 94, 142, 0.4);
+  }
+  50% {
+    transform: scale(1.02);
+    box-shadow: 0 0 40px 10px rgba(255, 42, 109, 0.6);
+  }
+}
+
+.animate-candy-pulse {
+  animation: candy-pulse 2.5s infinite ease-in-out;
+}
+
+/* Custom pleasant scrollbar */
+::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+
+::-webkit-scrollbar-track {
+  background: #FAF8F5;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #E4D8CE;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #CDBEAF;
+}
