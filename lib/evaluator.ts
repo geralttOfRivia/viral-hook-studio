@@ -78,42 +78,53 @@ Return ONLY a valid JSON object matching this schema:
   // Call Google Gemini 3.6 Flash directly
   if (geminiKey) {
     const model = 'gemini-3.6-flash';
-    const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${geminiKey}`,
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          contents: [
-            {
-              parts: [
-                { text: `${systemPrompt}\n\nIntro script to evaluate:\n"""${script}"""` },
-              ],
-            },
-          ],
-          generationConfig: {
-            responseMimeType: 'application/json',
-            temperature: 0.1,
-          },
-        }),
+    let response: Response | null = null;
+    let lastStatus = 200;
+
+    // Retry once on transient 503 high-demand or 429 spikes
+    for (let attempt = 0; attempt < 2; attempt++) {
+      if (attempt > 0) {
+        await new Promise((res) => setTimeout(res, 1500));
       }
-    );
 
-    if (!response.ok) {
-      const errText = await response.text();
-      let msg = `HTTP ${response.status}`;
-      try {
-        const j = JSON.parse(errText);
-        msg = j.error?.message || msg;
-      } catch (_) {}
+      response = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${geminiKey}`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            contents: [
+              {
+                parts: [
+                  { text: `${systemPrompt}\n\nIntro script to evaluate:\n"""${script}"""` },
+                ],
+              },
+            ],
+            generationConfig: {
+              responseMimeType: 'application/json',
+              temperature: 0.1,
+            },
+          }),
+        }
+      );
 
-      if (response.status === 429) {
+      if (response.ok) {
+        break;
+      }
+
+      lastStatus = response.status;
+      if (response.status !== 503 && response.status !== 429) {
+        break; // Non-retryable error
+      }
+    }
+
+    if (!response || !response.ok) {
+      if (lastStatus === 429 || lastStatus === 503) {
         throw new Error(
-          'Gemini 3.6 Flash rate limit reached (Free tier limit is 15 requests per minute). Please wait 5–10 seconds and try again.'
+          'Diagnostics engine is experiencing high creator demand. Please wait 5 seconds and try again.'
         );
       }
-
-      throw new Error(`Gemini API (${model}): ${msg}`);
+      throw new Error('Retention diagnostics service is momentarily busy. Please try again.');
     }
 
     const data = await response.json();
