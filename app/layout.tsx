@@ -1,10 +1,13 @@
 import type { Metadata } from 'next';
 import './globals.css';
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://viralhookstudio.com';
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://viral-hook-studio.vercel.app';
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
+  verification: {
+    google: '2c47E2aURfV83Dk5iyzKvT6XmvpTr1C4MMJoX-aCXtE',
+  },
   title: {
     default: 'Viral Hook Studio | 15-Second YouTube Intro Analyzer & Hype Meter',
     template: '%s | Viral Hook Studio',
