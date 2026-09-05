@@ -1,5 +1,11 @@
 # 🍭 Viral Hook Studio (15-Second Intro Analyzer)
 
+[![Live Demo](https://img.shields.io/badge/Live%20App-viral--hook--studio.vercel.app-pink?style=for-the-badge&logo=vercel)](https://viral-hook-studio.vercel.app)
+[![Framework](https://img.shields.io/badge/Next.js-14-black?style=for-the-badge&logo=next.js)](https://nextjs.org)
+[![AI Engine](https://img.shields.io/badge/AI%20Engine-Gemini%203.6-blue?style=for-the-badge)](https://ai.google.dev)
+
+> 🌐 **Live Web Application**: **[https://viral-hook-studio.vercel.app](https://viral-hook-studio.vercel.app)**
+
 **Viral Hook Studio** is a gamified, Notion-style web application for YouTube creators to test, diagnose, and score their 15-second video intros before filming.
 
 Long-form video retention is won or lost in the first 3 to 10 seconds. Viral Hook Studio evaluates your opening script against the **PVSS Framework** (Promise, Validation, Structure, Stakes) and renders live feedback via **The Hype Meter** — a 3D animated circular score gauge with dynamic color shifts and digital confetti.
