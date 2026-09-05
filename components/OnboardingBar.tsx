@@ -32,9 +32,10 @@ export const OnboardingBar: React.FC<OnboardingBarProps> = ({ onOpenGuide }) => 
         <button
           onClick={() => setIsVisible(true)}
           type="button"
-          className="text-xs text-slate-500 hover:text-pink-600 font-semibold flex items-center gap-1 transition-colors"
+          aria-label="Show 3-step quick guide"
+          className="text-xs text-slate-600 hover:text-pink-700 font-semibold flex items-center gap-1 transition-colors"
         >
-          <HelpCircle className="w-3.5 h-3.5" />
+          <HelpCircle className="w-3.5 h-3.5" aria-hidden="true" />
           <span>Show 3-Step Quick Guide</span>
         </button>
       </div>
@@ -47,10 +48,11 @@ export const OnboardingBar: React.FC<OnboardingBarProps> = ({ onOpenGuide }) => 
       <button
         onClick={handleDismiss}
         type="button"
+        aria-label="Dismiss 3-step quick guide"
         title="Dismiss guide"
-        className="absolute top-3.5 right-3.5 p-1 rounded-xl text-slate-400 hover:text-slate-600 hover:bg-white/60 transition-colors"
+        className="absolute top-3.5 right-3.5 p-1 rounded-xl text-slate-500 hover:text-slate-800 hover:bg-white/60 transition-colors"
       >
-        <X className="w-4 h-4" />
+        <X className="w-4 h-4" aria-hidden="true" />
       </button>
 
       <div className="flex flex-col gap-3 pr-6">
@@ -58,7 +60,7 @@ export const OnboardingBar: React.FC<OnboardingBarProps> = ({ onOpenGuide }) => 
           <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-black uppercase tracking-wider bg-pink-100 text-pink-700">
             ⚡ Quick Start
           </span>
-          <span className="text-xs font-bold text-slate-700">
+          <span className="text-xs font-bold text-slate-800">
             How to craft an 85+ retention hook in 3 steps:
           </span>
         </div>
@@ -66,14 +68,17 @@ export const OnboardingBar: React.FC<OnboardingBarProps> = ({ onOpenGuide }) => 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
           {/* Step 1 */}
           <div className="bg-white/80 backdrop-blur-xs p-3 rounded-2xl border border-white/80 shadow-xs flex items-start gap-2.5">
-            <div className="w-6 h-6 rounded-xl bg-pink-500 text-white font-black text-xs flex items-center justify-center flex-shrink-0">
+            <div 
+              className="w-6 h-6 rounded-xl bg-pink-500 text-white font-black text-xs flex items-center justify-center flex-shrink-0"
+              aria-hidden="true"
+            >
               1
             </div>
             <div>
               <span className="block font-black text-xs text-slate-800">
                 Draft 15-Sec Script
               </span>
-              <p className="text-[11px] text-slate-500 font-medium leading-relaxed">
+              <p className="text-[11px] text-slate-700 font-medium leading-relaxed">
                 Aim for <strong>30–45 words</strong>. Delete greetings like <em>"Hey guys"</em>.
               </p>
             </div>
@@ -81,14 +86,17 @@ export const OnboardingBar: React.FC<OnboardingBarProps> = ({ onOpenGuide }) => 
 
           {/* Step 2 */}
           <div className="bg-white/80 backdrop-blur-xs p-3 rounded-2xl border border-white/80 shadow-xs flex items-start gap-2.5">
-            <div className="w-6 h-6 rounded-xl bg-amber-500 text-white font-black text-xs flex items-center justify-center flex-shrink-0">
+            <div 
+              className="w-6 h-6 rounded-xl bg-amber-500 text-white font-black text-xs flex items-center justify-center flex-shrink-0"
+              aria-hidden="true"
+            >
               2
             </div>
             <div>
               <span className="block font-black text-xs text-slate-800">
                 Click "Test Hook"
               </span>
-              <p className="text-[11px] text-slate-500 font-medium leading-relaxed">
+              <p className="text-[11px] text-slate-700 font-medium leading-relaxed">
                 Instantly scores your <strong>Promise, Validation, Structure & Stakes</strong>.
               </p>
             </div>
@@ -96,14 +104,17 @@ export const OnboardingBar: React.FC<OnboardingBarProps> = ({ onOpenGuide }) => 
 
           {/* Step 3 */}
           <div className="bg-white/80 backdrop-blur-xs p-3 rounded-2xl border border-white/80 shadow-xs flex items-start gap-2.5">
-            <div className="w-6 h-6 rounded-xl bg-emerald-500 text-white font-black text-xs flex items-center justify-center flex-shrink-0">
+            <div 
+              className="w-6 h-6 rounded-xl bg-emerald-600 text-white font-black text-xs flex items-center justify-center flex-shrink-0"
+              aria-hidden="true"
+            >
               3
             </div>
             <div>
               <span className="block font-black text-xs text-slate-800">
                 Aim for 85+ & Film!
               </span>
-              <p className="text-[11px] text-slate-500 font-medium leading-relaxed">
+              <p className="text-[11px] text-slate-700 font-medium leading-relaxed">
                 Fix Director's Notes, trigger pink confetti, then record with confidence.
               </p>
             </div>
@@ -114,7 +125,7 @@ export const OnboardingBar: React.FC<OnboardingBarProps> = ({ onOpenGuide }) => 
           <button
             onClick={onOpenGuide}
             type="button"
-            className="text-xs font-bold text-pink-600 hover:text-pink-700 hover:underline flex items-center gap-1"
+            className="text-xs font-bold text-pink-700 hover:text-pink-800 hover:underline flex items-center gap-1"
           >
             <span>Learn the complete PVSS Framework with before/after examples &rarr;</span>
           </button>

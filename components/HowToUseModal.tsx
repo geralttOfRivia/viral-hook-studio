@@ -12,19 +12,27 @@ export const HowToUseModal: React.FC<HowToUseModalProps> = ({ isOpen, onClose })
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm animate-fade-in">
+    <div 
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm animate-fade-in"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="pvss-guide-title"
+    >
       <div className="w-full max-w-2xl max-h-[90vh] overflow-y-auto bg-white rounded-3xl border border-[#EFE5DB] shadow-2xl p-6 sm:p-8 flex flex-col gap-6">
         {/* Header */}
         <div className="flex items-center justify-between border-b border-[#F4ECE4] pb-4">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-pink-500 to-amber-400 text-white flex items-center justify-center text-xl shadow-sm">
+            <div 
+              className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-pink-500 to-amber-400 text-white flex items-center justify-center text-xl shadow-sm"
+              aria-hidden="true"
+            >
               📖
             </div>
             <div>
-              <h2 className="text-lg font-black text-slate-800 tracking-tight">
+              <h2 id="pvss-guide-title" className="text-lg font-black text-slate-800 tracking-tight">
                 How It Works & The PVSS Guide
               </h2>
-              <p className="text-xs text-slate-500 font-medium">
+              <p className="text-xs text-slate-600 font-medium">
                 The science of winning YouTube retention in the first 15 seconds.
               </p>
             </div>
@@ -33,9 +41,10 @@ export const HowToUseModal: React.FC<HowToUseModalProps> = ({ isOpen, onClose })
           <button
             onClick={onClose}
             type="button"
-            className="p-2 rounded-xl text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors"
+            aria-label="Close PVSS guide"
+            className="p-2 rounded-xl text-slate-500 hover:text-slate-800 hover:bg-slate-100 transition-colors"
           >
-            <X className="w-5 h-5" />
+            <X className="w-5 h-5" aria-hidden="true" />
           </button>
         </div>
 

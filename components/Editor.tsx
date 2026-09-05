@@ -116,14 +116,14 @@ export const Editor: React.FC<EditorProps> = ({
           </div>
           <div className="min-w-0 flex-1">
             <div className="flex items-center gap-2 mb-0.5 flex-wrap">
-              <span className="text-[10px] font-black uppercase tracking-wider text-slate-400">
+              <span className="text-[10px] font-black uppercase tracking-wider text-slate-600">
                 Tested Intro Script
               </span>
               <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200">
                 {pacing.wordCount} words • ~{pacing.estimatedSeconds}s spoken
               </span>
               {usage && (
-                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 border border-slate-200">
+                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-slate-100 text-slate-700 border border-slate-200">
                   {usage.remaining}/{usage.max} tests left today
                 </span>
               )}
@@ -138,11 +138,12 @@ export const Editor: React.FC<EditorProps> = ({
           <button
             type="button"
             onClick={onToggleCollapse}
-            className="w-full sm:w-auto px-4 py-2 rounded-2xl text-xs font-black text-pink-600 hover:text-pink-700 bg-pink-50 hover:bg-pink-100/80 border border-pink-200 shadow-2xs flex items-center justify-center gap-1.5 transition-all active:scale-95"
+            aria-label="Expand script editor and re-test"
+            className="w-full sm:w-auto px-4 py-2 rounded-2xl text-xs font-black text-pink-700 hover:text-pink-800 bg-pink-50 hover:bg-pink-100/80 border border-pink-200 shadow-2xs flex items-center justify-center gap-1.5 transition-all active:scale-95"
           >
-            <Edit3 className="w-3.5 h-3.5" />
+            <Edit3 className="w-3.5 h-3.5" aria-hidden="true" />
             <span>Edit Script & Re-Test</span>
-            <ChevronDown className="w-3.5 h-3.5" />
+            <ChevronDown className="w-3.5 h-3.5" aria-hidden="true" />
           </button>
         </div>
       </div>
@@ -155,14 +156,17 @@ export const Editor: React.FC<EditorProps> = ({
       {/* 1. Editor Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-xl bg-pink-100 text-pink-600 flex items-center justify-center text-sm font-black shadow-2xs">
+          <div 
+            className="w-8 h-8 rounded-xl bg-pink-100 text-pink-700 flex items-center justify-center text-sm font-black shadow-2xs"
+            aria-hidden="true"
+          >
             ✍️
           </div>
           <div>
             <h2 className="text-base sm:text-lg font-black text-slate-800 tracking-tight">
               15-Second Intro Script
             </h2>
-            <p className="text-xs text-slate-400 font-medium">
+            <p className="text-xs text-slate-600 font-medium">
               Enter the exact words you will speak in the first 15 seconds.
             </p>
           </div>
@@ -173,10 +177,11 @@ export const Editor: React.FC<EditorProps> = ({
             <button
               onClick={onToggleCollapse}
               type="button"
-              className="p-1.5 px-2.5 rounded-xl text-slate-500 hover:text-slate-800 hover:bg-slate-100 text-xs font-semibold flex items-center gap-1 transition-all"
+              className="p-1.5 px-2.5 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-100 text-xs font-semibold flex items-center gap-1 transition-all"
+              aria-label="Minimize editor"
               title="Minimize editor"
             >
-              <ChevronUp className="w-3.5 h-3.5" />
+              <ChevronUp className="w-3.5 h-3.5" aria-hidden="true" />
               <span>Hide</span>
             </button>
           )}
@@ -185,35 +190,41 @@ export const Editor: React.FC<EditorProps> = ({
             <button
               onClick={handleClear}
               type="button"
-              className="p-1.5 px-2.5 rounded-xl text-slate-400 hover:text-slate-600 hover:bg-slate-100 text-xs font-semibold flex items-center gap-1 transition-all"
+              className="p-1.5 px-2.5 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-100 text-xs font-semibold flex items-center gap-1 transition-all"
+              aria-label="Reset script to blank"
               title="Clear text"
             >
-              <RotateCcw className="w-3.5 h-3.5" />
+              <RotateCcw className="w-3.5 h-3.5" aria-hidden="true" />
               <span>Reset</span>
             </button>
           )}
         </div>
       </div>
 
-      {/* 2. Prominent High-Contrast Textarea Container */}
+      {/* 2. Prominent High-Contrast Textarea Container with Screen-Reader Label */}
       <div
-        onClick={() => textareaRef.current?.focus()}
-        className={`relative rounded-2xl border-2 transition-all p-4 cursor-text flex flex-col min-h-[220px] sm:min-h-[240px] ${
+        className={`relative rounded-2xl border-2 transition-all p-4 flex flex-col min-h-[220px] sm:min-h-[240px] ${
           isFocused
             ? 'border-pink-500 bg-white ring-4 ring-pink-100/70 shadow-candy-sm'
             : 'border-[#E5D7C9] bg-[#FAF8F5] hover:border-[#D4C3B2]'
         }`}
       >
+        <label htmlFor="hook-script-input" className="sr-only">
+          15-Second YouTube Intro Script Input
+        </label>
+
         {/* Animated Typing Beacon when Empty */}
         {isEmpty && !isFocused && (
-          <div className="mb-2 inline-flex items-center gap-2 text-xs font-bold text-pink-600 bg-pink-100/80 px-3 py-1 rounded-full w-fit animate-pulse">
-            <Edit3 className="w-3.5 h-3.5" />
+          <div className="mb-2 inline-flex items-center gap-2 text-xs font-bold text-pink-700 bg-pink-100/90 px-3 py-1 rounded-full w-fit animate-pulse">
+            <Edit3 className="w-3.5 h-3.5" aria-hidden="true" />
             <span>Start typing your hook here...</span>
-            <span className="w-1.5 h-3.5 bg-pink-500 rounded-xs animate-bounce" />
+            <span className="w-1.5 h-3.5 bg-pink-600 rounded-xs animate-bounce" aria-hidden="true" />
           </div>
         )}
 
         <textarea
+          id="hook-script-input"
+          aria-label="15-Second YouTube Intro Script Input"
           ref={textareaRef}
           value={script}
           onFocus={() => setIsFocused(true)}
@@ -223,16 +234,16 @@ export const Editor: React.FC<EditorProps> = ({
 
 Example:
 'Apple just quietly killed the iPhone charging port, but nobody noticed because they hid the announcement inside a 900-page patent filing. In the next 10 minutes, I will show you the exact prototype...'"
-          className="w-full flex-1 resize-none bg-transparent text-slate-800 placeholder-slate-400 text-base leading-relaxed focus:outline-none font-normal"
+          className="w-full flex-1 resize-none bg-transparent text-slate-800 placeholder-slate-500 text-base leading-relaxed focus:outline-none font-normal"
           rows={7}
         />
       </div>
 
       {/* 3. 15-Second Pacing Visual Bar */}
       <div className="bg-[#FAF8F5] p-3.5 rounded-2xl border border-[#EFE5DB] flex flex-col gap-2">
-        <div className="flex items-center justify-between text-xs font-semibold text-slate-600">
+        <div className="flex items-center justify-between text-xs font-semibold text-slate-700">
           <div className="flex items-center gap-2">
-            <Clock className="w-3.5 h-3.5 text-slate-400" />
+            <Clock className="w-3.5 h-3.5 text-slate-600" aria-hidden="true" />
             <span>
               <strong>{pacing.wordCount}</strong> words &bull; ~
               <strong>{pacing.estimatedSeconds}s</strong> spoken (15s Target)
@@ -253,17 +264,17 @@ Example:
               isEmpty
                 ? 'bg-transparent'
                 : pacing.status === 'sweet_spot'
-                ? 'bg-gradient-to-r from-emerald-400 to-emerald-500 shadow-sm'
+                ? 'bg-gradient-to-r from-emerald-500 to-emerald-600 shadow-sm'
                 : pacing.wordCount < 30
-                ? 'bg-gradient-to-r from-amber-400 to-amber-500'
-                : 'bg-gradient-to-r from-rose-400 to-pink-500'
+                ? 'bg-gradient-to-r from-amber-500 to-amber-600'
+                : 'bg-gradient-to-r from-rose-500 to-pink-600'
             }`}
             style={{ width: `${progressPercent}%` }}
           />
 
           {/* 15s Sweet Spot Zone (30–45 words) with subtle 1px dashed markers */}
           <div
-            className="absolute top-0 bottom-0 border-x border-dashed border-slate-300 bg-emerald-400/20 pointer-events-none z-10"
+            className="absolute top-0 bottom-0 border-x border-dashed border-slate-400 bg-emerald-400/20 pointer-events-none z-10"
             style={{
               left: `${sweetSpotStartPercent}%`,
               width: `${sweetSpotWidthPercent}%`,
@@ -273,15 +284,15 @@ Example:
         </div>
 
         {/* Pacing Guidance Labels */}
-        <div className="flex items-center justify-between text-[10px] font-bold text-slate-400 px-0.5 -mt-0.5">
+        <div className="flex items-center justify-between text-[10px] font-bold text-slate-600 px-0.5 -mt-0.5">
           <span>0w (0s)</span>
-          <span className="text-emerald-700 font-extrabold bg-emerald-50/90 px-1.5 py-0.5 rounded border border-emerald-200 flex items-center gap-1">
+          <span className="text-emerald-800 font-extrabold bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-300 flex items-center gap-1">
             <span>🎯 15s Window (30–45 words)</span>
           </span>
           <span>65w+ (25s+)</span>
         </div>
 
-        <p className="text-[11px] text-slate-500 font-medium">
+        <p className="text-[11px] text-slate-700 font-medium">
           {pacing.statusMessage}
         </p>
       </div>
@@ -290,12 +301,12 @@ Example:
       <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-1">
         {/* Left: Keyboard shortcut & Daily Counter Chip */}
         <div className="flex items-center gap-2.5 flex-wrap">
-          <div className="text-xs text-slate-400 font-medium flex items-center gap-1.5">
-            <kbd className="px-1.5 py-0.5 bg-slate-100 border border-slate-300 rounded text-[10px] font-mono text-slate-600">
+          <div className="text-xs text-slate-600 font-medium flex items-center gap-1.5">
+            <kbd className="px-1.5 py-0.5 bg-slate-100 border border-slate-300 rounded text-[10px] font-mono text-slate-700">
               Ctrl
             </kbd>
             <span>+</span>
-            <kbd className="px-1.5 py-0.5 bg-slate-100 border border-slate-300 rounded text-[10px] font-mono text-slate-600">
+            <kbd className="px-1.5 py-0.5 bg-slate-100 border border-slate-300 rounded text-[10px] font-mono text-slate-700">
               Enter
             </kbd>
             <span className="hidden sm:inline">to test</span>
@@ -360,7 +371,7 @@ Example:
               <span className="font-black text-slate-800 block text-xs">
                 You've reached today's 5 free evaluations!
               </span>
-              <span className="text-[11px] text-slate-500 font-medium leading-relaxed block mt-0.5">
+              <span className="text-[11px] text-slate-600 font-medium leading-relaxed block mt-0.5">
                 Resets at midnight. Need higher limits for your channel or production team? Reach out directly or tip on Buy Me a Coffee to expand servers!
               </span>
             </div>
@@ -369,19 +380,21 @@ Example:
           <div className="flex items-center gap-2 flex-shrink-0 w-full md:w-auto justify-end flex-wrap pt-2 md:pt-0 border-t md:border-t-0 border-amber-200/60">
             <a
               href="mailto:geralttofrivia@zohomail.in?subject=Viral%20Hook%20Studio%20-%20Higher%20Limit%20Request"
+              aria-label="Request higher daily limit via email"
               className="px-3.5 py-2 rounded-xl bg-white hover:bg-slate-100 text-slate-700 font-bold text-xs border border-slate-300 shadow-2xs flex items-center gap-1.5 transition-all"
             >
-              <Mail className="w-3.5 h-3.5 text-slate-500" />
+              <Mail className="w-3.5 h-3.5 text-slate-600" aria-hidden="true" />
               <span>Request Higher Limit</span>
             </a>
             <a
               href="https://buymeacoffee.com/geraltofrivia"
               target="_blank"
-              rel="noreferrer"
+              rel="noopener noreferrer"
+              aria-label="Support creator on Buy Me a Coffee"
               className="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-600 text-white font-black text-xs flex items-center gap-1.5 transition-all shadow-xs"
             >
               <span>Buy Me a Coffee</span>
-              <Coffee className="w-3.5 h-3.5" />
+              <Coffee className="w-3.5 h-3.5" aria-hidden="true" />
             </a>
           </div>
         </div>
@@ -389,8 +402,8 @@ Example:
 
       {/* 5. BOTTOM: Preset Hook Samples Below Button */}
       <div className="border-t border-[#F4ECE4] pt-4 flex flex-col gap-2">
-        <div className="text-[11px] font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
-          <Sparkles className="w-3.5 h-3.5 text-pink-500" />
+        <div className="text-[11px] font-bold uppercase tracking-wider text-slate-600 flex items-center gap-1.5">
+          <Sparkles className="w-3.5 h-3.5 text-pink-600" aria-hidden="true" />
           <span>Or load a sample hook preset to test:</span>
         </div>
         <div className="flex flex-wrap gap-2">
@@ -401,6 +414,7 @@ Example:
                 key={preset.id}
                 onClick={() => handleSelectPreset(preset)}
                 type="button"
+                aria-label={`Load preset hook: ${preset.title}`}
                 className={`px-3 py-1.5 rounded-full text-xs font-bold transition-all border ${
                   isSelected
                     ? 'bg-pink-500 text-white border-pink-500 shadow-xs scale-[1.02]'
@@ -409,8 +423,8 @@ Example:
               >
                 <span>{preset.title}</span>
                 <span
-                  className={`ml-1.5 text-[10px] opacity-80 ${
-                    isSelected ? 'text-pink-100' : 'text-slate-500'
+                  className={`ml-1.5 text-[10px] ${
+                    isSelected ? 'text-pink-100 font-bold' : 'text-slate-600 font-medium'
                   }`}
                 >
                   ({preset.tag})

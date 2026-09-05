@@ -73,7 +73,7 @@ export const AdBanner: React.FC<AdBannerProps> = ({ slot = 'bottom-banner' }) =>
             <span className="text-[9px] font-black uppercase tracking-wider px-1.5 py-0.5 rounded bg-slate-800 text-white shadow-2xs">
               Ad
             </span>
-            <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
+            <span className="text-[10px] font-bold uppercase tracking-wider text-slate-600">
               Sponsored
             </span>
           </div>
@@ -83,21 +83,21 @@ export const AdBanner: React.FC<AdBannerProps> = ({ slot = 'bottom-banner' }) =>
             <button
               onClick={handlePrev}
               type="button"
-              className="p-1 rounded-md hover:bg-slate-100 text-slate-500 hover:text-slate-800 transition-colors"
+              className="p-1 rounded-md hover:bg-slate-100 text-slate-600 hover:text-slate-900 transition-colors"
               aria-label="Previous partner"
             >
-              <ChevronLeft className="w-3 h-3" />
+              <ChevronLeft className="w-3 h-3" aria-hidden="true" />
             </button>
-            <span className="text-[10px] font-bold text-slate-400 select-none tabular-nums px-0.5">
+            <span className="text-[10px] font-bold text-slate-600 select-none tabular-nums px-0.5">
               {currentIndex + 1}/{AFFILIATE_PARTNERS.length}
             </span>
             <button
               onClick={handleNext}
               type="button"
-              className="p-1 rounded-md hover:bg-slate-100 text-slate-500 hover:text-slate-800 transition-colors"
+              className="p-1 rounded-md hover:bg-slate-100 text-slate-600 hover:text-slate-900 transition-colors"
               aria-label="Next partner"
             >
-              <ChevronRight className="w-3 h-3" />
+              <ChevronRight className="w-3 h-3" aria-hidden="true" />
             </button>
           </div>
         </div>
@@ -115,11 +115,12 @@ export const AdBanner: React.FC<AdBannerProps> = ({ slot = 'bottom-banner' }) =>
               <div className="flex items-start gap-2.5">
                 <div
                   className={`p-2 rounded-2xl bg-white border border-[#E8DDD0] ${currentPartner.accentColor.text} shadow-2xs flex-shrink-0`}
+                  aria-hidden="true"
                 >
                   <IconComponent className="w-4 h-4" />
                 </div>
                 <div>
-                  <span className="text-[10px] font-bold text-slate-400 block uppercase">
+                  <span className="text-[10px] font-bold text-slate-600 block uppercase">
                     {currentPartner.category}
                   </span>
                   <span className="font-bold text-slate-800 text-xs block leading-tight">
@@ -127,7 +128,7 @@ export const AdBanner: React.FC<AdBannerProps> = ({ slot = 'bottom-banner' }) =>
                   </span>
                 </div>
               </div>
-              <p className="text-[11px] text-slate-500 leading-relaxed">
+              <p className="text-[11px] text-slate-700 leading-relaxed">
                 {currentPartner.description}
               </p>
             </motion.div>
@@ -138,10 +139,10 @@ export const AdBanner: React.FC<AdBannerProps> = ({ slot = 'bottom-banner' }) =>
           href={currentPartner.url}
           target="_blank"
           rel="sponsored noopener noreferrer"
-          className="w-full py-2 px-3 rounded-2xl bg-white hover:bg-pink-50/50 text-slate-800 hover:text-pink-600 font-bold text-[11px] border border-[#E8DDD0] hover:border-pink-200 flex items-center justify-center gap-1.5 transition-all shadow-2xs"
+          className="w-full py-2 px-3 rounded-2xl bg-white hover:bg-pink-50/50 text-slate-800 hover:text-pink-700 font-bold text-[11px] border border-[#E8DDD0] hover:border-pink-200 flex items-center justify-center gap-1.5 transition-all shadow-2xs"
         >
           <span>{currentPartner.cta}</span>
-          <ExternalLink className="w-3 h-3 text-slate-400" />
+          <ExternalLink className="w-3 h-3 text-slate-500" aria-hidden="true" />
         </a>
       </div>
     );
@@ -155,7 +156,7 @@ export const AdBanner: React.FC<AdBannerProps> = ({ slot = 'bottom-banner' }) =>
         <span className="text-[10px] font-black uppercase tracking-widest px-2 py-0.5 rounded-md bg-slate-800 text-white shadow-2xs">
           Ad
         </span>
-        <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
+        <span className="text-[11px] font-bold text-slate-600 uppercase tracking-wider">
           Sponsored Creator Recommendations
         </span>
         <div className="flex-1 h-px bg-[#EAE0D4]" />
@@ -179,7 +180,7 @@ export const AdBanner: React.FC<AdBannerProps> = ({ slot = 'bottom-banner' }) =>
             >
               {currentPartner.category}
             </span>
-            <span className="text-[9px] font-semibold uppercase tracking-wider text-slate-400 hidden xs:inline flex-shrink-0">
+            <span className="text-[9px] font-semibold uppercase tracking-wider text-slate-600 hidden xs:inline flex-shrink-0">
               Affiliate Spotlight
             </span>
           </div>
@@ -190,11 +191,11 @@ export const AdBanner: React.FC<AdBannerProps> = ({ slot = 'bottom-banner' }) =>
             <button
               onClick={handlePrev}
               type="button"
-              className="p-1 rounded-lg hover:bg-slate-100 text-slate-500 hover:text-slate-800 transition-colors"
+              className="p-1 rounded-lg hover:bg-slate-100 text-slate-600 hover:text-slate-900 transition-colors"
               aria-label="Previous offer"
               title="Previous offer"
             >
-              <ChevronLeft className="w-3.5 h-3.5" />
+              <ChevronLeft className="w-3.5 h-3.5" aria-hidden="true" />
             </button>
 
             {/* Fixed-Width Dots Container: Each dot has exact w-3 h-3 slot so width NEVER jitters */}
@@ -212,7 +213,7 @@ export const AdBanner: React.FC<AdBannerProps> = ({ slot = 'bottom-banner' }) =>
                     className={`h-1.5 rounded-full transition-all block ${
                       idx === currentIndex
                         ? 'w-2.5 bg-pink-500 shadow-2xs'
-                        : 'w-1.5 bg-slate-200 hover:bg-slate-300'
+                        : 'w-1.5 bg-slate-300 hover:bg-slate-400'
                     }`}
                   />
                 </button>
@@ -220,7 +221,7 @@ export const AdBanner: React.FC<AdBannerProps> = ({ slot = 'bottom-banner' }) =>
             </div>
 
             {/* Stable Tabular Numerical Indicator */}
-            <span className="text-[10px] font-bold text-slate-400 select-none tabular-nums pl-0.5 min-w-[24px] text-center">
+            <span className="text-[10px] font-bold text-slate-600 select-none tabular-nums pl-0.5 min-w-[24px] text-center">
               {currentIndex + 1}/{AFFILIATE_PARTNERS.length}
             </span>
 
@@ -228,11 +229,11 @@ export const AdBanner: React.FC<AdBannerProps> = ({ slot = 'bottom-banner' }) =>
             <button
               onClick={handleNext}
               type="button"
-              className="p-1 rounded-lg hover:bg-slate-100 text-slate-500 hover:text-slate-800 transition-colors"
+              className="p-1 rounded-lg hover:bg-slate-100 text-slate-600 hover:text-slate-900 transition-colors"
               aria-label="Next offer"
               title="Next offer"
             >
-              <ChevronRight className="w-3.5 h-3.5" />
+              <ChevronRight className="w-3.5 h-3.5" aria-hidden="true" />
             </button>
           </div>
         </div>
@@ -243,6 +244,7 @@ export const AdBanner: React.FC<AdBannerProps> = ({ slot = 'bottom-banner' }) =>
           <div className="flex items-start sm:items-center gap-3 min-w-0 flex-1">
             <div
               className={`w-10 h-10 rounded-2xl bg-white ${currentPartner.accentColor.text} border border-[#EAE0D4] flex items-center justify-center flex-shrink-0 shadow-2xs transition-colors`}
+              aria-hidden="true"
             >
               <IconComponent className="w-5 h-5" />
             </div>
@@ -257,10 +259,10 @@ export const AdBanner: React.FC<AdBannerProps> = ({ slot = 'bottom-banner' }) =>
                   transition={{ duration: 0.2, ease: 'easeOut' }}
                   className="flex flex-col gap-0.5"
                 >
-                  <h4 className="font-black text-xs sm:text-sm text-slate-800 tracking-tight truncate">
+                  <div className="font-black text-xs sm:text-sm text-slate-800 tracking-tight truncate">
                     {currentPartner.headline}
-                  </h4>
-                  <p className="text-[11px] text-slate-500 font-medium line-clamp-1 sm:line-clamp-none">
+                  </div>
+                  <p className="text-[11px] text-slate-700 font-medium line-clamp-1 sm:line-clamp-none">
                     {currentPartner.description}
                   </p>
                 </motion.div>
@@ -276,11 +278,11 @@ export const AdBanner: React.FC<AdBannerProps> = ({ slot = 'bottom-banner' }) =>
               rel="sponsored noopener noreferrer"
               className="w-full sm:w-auto px-4 py-2 rounded-2xl text-xs font-black text-slate-800 bg-white hover:bg-pink-50 border border-[#E8DDD0] hover:border-pink-200 shadow-2xs flex items-center justify-center gap-1.5 transition-all group/btn"
             >
-              <span className="text-pink-600 group-hover/btn:translate-x-0.5 transition-transform">
+              <span className="text-pink-600 group-hover/btn:translate-x-0.5 transition-transform" aria-hidden="true">
                 ✨
               </span>
               <span>{currentPartner.cta}</span>
-              <ExternalLink className="w-3.5 h-3.5 text-slate-400 group-hover/btn:text-pink-500 transition-colors" />
+              <ExternalLink className="w-3.5 h-3.5 text-slate-500 group-hover/btn:text-pink-500 transition-colors" aria-hidden="true" />
             </a>
           </div>
         </div>

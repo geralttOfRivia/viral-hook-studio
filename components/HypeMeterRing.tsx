@@ -236,12 +236,19 @@ export const HypeMeterRing: React.FC<HypeMeterRingProps> = ({
           </svg>
 
           {/* Center Score Display with 3D Depth Card */}
-          <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+          <div 
+            className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none"
+            role="meter"
+            aria-valuenow={score}
+            aria-valuemin={0}
+            aria-valuemax={100}
+            aria-label="15-second intro hype score"
+          >
             <div className="flex flex-col items-center">
               {isLoading ? (
                 <div className="flex flex-col items-center gap-1.5 animate-pulse">
-                  <span className="text-3xl">🍬</span>
-                  <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">
+                  <span className="text-3xl" aria-hidden="true">🍬</span>
+                  <span className="text-xs font-bold text-slate-600 uppercase tracking-wider">
                     Analyzing Hook...
                   </span>
                 </div>
@@ -253,13 +260,13 @@ export const HypeMeterRing: React.FC<HypeMeterRingProps> = ({
                     >
                       {displayScore}
                     </motion.span>
-                    <span className="text-xl font-bold text-slate-300 ml-1">/100</span>
+                    <span className="text-xl font-bold text-slate-500 ml-1">/100</span>
                   </div>
 
                   <div
                     className={`mt-1 inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-black shadow-sm tracking-wide ${colorConfig.badgeBg}`}
                   >
-                    <IconComponent className="w-3.5 h-3.5" />
+                    <IconComponent className="w-3.5 h-3.5" aria-hidden="true" />
                     <span>{grade}</span>
                   </div>
                 </>
@@ -270,7 +277,7 @@ export const HypeMeterRing: React.FC<HypeMeterRingProps> = ({
       </div>
 
       {/* Score Tier Explainer Bar */}
-      <div className="w-full mt-6 flex items-center justify-between gap-1 text-[11px] font-bold text-slate-400 px-2">
+      <div className="w-full mt-6 flex items-center justify-between gap-1 text-[11px] font-bold text-slate-600 px-2">
         <div
           className={`flex-1 py-1.5 px-1 rounded-lg transition-all text-center border ${
             isYellow
@@ -278,7 +285,7 @@ export const HypeMeterRing: React.FC<HypeMeterRingProps> = ({
               : 'bg-white/60 border-slate-200/60'
           }`}
         >
-          <span className="block text-[10px] text-amber-500 uppercase">0–50</span>
+          <span className="block text-[10px] text-amber-700 uppercase font-black">0–50</span>
           <span>Yellow (Flat)</span>
         </div>
         <div
@@ -288,7 +295,7 @@ export const HypeMeterRing: React.FC<HypeMeterRingProps> = ({
               : 'bg-white/60 border-slate-200/60'
           }`}
         >
-          <span className="block text-[10px] text-emerald-500 uppercase">51–84</span>
+          <span className="block text-[10px] text-emerald-700 uppercase font-black">51–84</span>
           <span>Mint (Solid)</span>
         </div>
         <div
@@ -298,13 +305,13 @@ export const HypeMeterRing: React.FC<HypeMeterRingProps> = ({
               : 'bg-white/60 border-slate-200/60'
           }`}
         >
-          <span className="block text-[10px] text-pink-500 uppercase">85–100</span>
+          <span className="block text-[10px] text-pink-700 uppercase font-black">85–100</span>
           <span>Pink (Viral 🎉)</span>
         </div>
       </div>
 
       {/* Actionable Verdict */}
-      <p className="mt-3 text-xs text-slate-600 font-medium px-2 leading-relaxed">
+      <p className="mt-3 text-xs text-slate-700 font-medium px-2 leading-relaxed">
         {verdict}
       </p>
 
@@ -313,9 +320,10 @@ export const HypeMeterRing: React.FC<HypeMeterRingProps> = ({
         <button
           onClick={triggerCandyConfetti}
           type="button"
-          className="mt-3 inline-flex items-center gap-1.5 text-xs font-bold text-pink-600 hover:text-pink-700 bg-pink-100/70 hover:bg-pink-100 px-3 py-1 rounded-full transition-colors"
+          aria-label="Shoot celebration confetti again"
+          className="mt-3 inline-flex items-center gap-1.5 text-xs font-bold text-pink-700 hover:text-pink-800 bg-pink-100/80 hover:bg-pink-100 px-3 py-1 rounded-full transition-colors"
         >
-          <Sparkles className="w-3.5 h-3.5" />
+          <Sparkles className="w-3.5 h-3.5" aria-hidden="true" />
           <span>Shoot Confetti Again</span>
         </button>
       )}

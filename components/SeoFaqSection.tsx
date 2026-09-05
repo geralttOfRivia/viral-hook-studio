@@ -33,14 +33,14 @@ export const SeoFaqSection: React.FC = () => {
     <section className="mt-8 pt-8 border-t border-[#F0E6DC] flex flex-col gap-5 max-w-4xl mx-auto w-full">
       <div className="flex flex-col gap-1 text-center sm:text-left">
         <div className="flex items-center justify-center sm:justify-start gap-2">
-          <span className="text-xs font-black uppercase tracking-wider text-pink-600 bg-pink-100 px-2.5 py-0.5 rounded-full">
+          <span className="text-xs font-black uppercase tracking-wider text-pink-700 bg-pink-100 px-2.5 py-0.5 rounded-full">
             Retention Guide & FAQ
           </span>
         </div>
         <h2 className="text-lg sm:text-xl font-black text-slate-800 tracking-tight">
           Frequently Asked Questions About YouTube Hooks
         </h2>
-        <p className="text-xs text-slate-500 font-medium">
+        <p className="text-xs text-slate-600 font-medium">
           Master the psychology of high-retention video intros.
         </p>
       </div>
@@ -59,6 +59,9 @@ export const SeoFaqSection: React.FC = () => {
               }`}
             >
               <button
+                id={`faq-btn-${idx}`}
+                aria-expanded={isOpen}
+                aria-controls={`faq-answer-${idx}`}
                 onClick={() => setOpenIndex(isOpen ? null : idx)}
                 type="button"
                 className="w-full p-4 flex items-center justify-between text-left gap-4 transition-colors"
@@ -66,17 +69,22 @@ export const SeoFaqSection: React.FC = () => {
                 <span className="font-bold text-xs sm:text-sm text-slate-800 leading-snug">
                   {faq.q}
                 </span>
-                <span className="p-1 rounded-lg bg-slate-100 text-slate-500 flex-shrink-0">
+                <span className="p-1 rounded-lg bg-slate-100 text-slate-600 flex-shrink-0" aria-hidden="true">
                   {isOpen ? (
-                    <ChevronUp className="w-4 h-4 text-pink-500" />
+                    <ChevronUp className="w-4 h-4 text-pink-600" />
                   ) : (
-                    <ChevronDown className="w-4 h-4 text-slate-400" />
+                    <ChevronDown className="w-4 h-4 text-slate-600" />
                   )}
                 </span>
               </button>
 
               {isOpen && (
-                <div className="px-4 pb-4 pt-1 text-xs text-slate-600 leading-relaxed font-medium border-t border-slate-100 animate-fade-in">
+                <div 
+                  id={`faq-answer-${idx}`}
+                  role="region"
+                  aria-labelledby={`faq-btn-${idx}`}
+                  className="px-4 pb-4 pt-1 text-xs text-slate-700 leading-relaxed font-medium border-t border-slate-100 animate-fade-in"
+                >
                   {faq.a}
                 </div>
               )}

@@ -99,12 +99,12 @@ export const PvssBreakdown: React.FC<PvssBreakdownProps> = ({ pillars }) => {
     <div className="flex flex-col gap-3">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-[#F4ECE4] pb-3">
         <div className="flex items-center gap-2">
-          <span className="text-lg">📊</span>
+          <span className="text-lg" aria-hidden="true">📊</span>
           <div>
-            <h3 className="text-sm sm:text-base font-black text-slate-800 tracking-tight">
+            <h2 className="text-sm sm:text-base font-black text-slate-800 tracking-tight">
               PVSS Framework Breakdown
-            </h3>
-            <p className="text-[11px] text-slate-400 font-medium">
+            </h2>
+            <p className="text-[11px] text-slate-600 font-medium">
               Click any pillar to view rules of thumb, benchmarks & checklists
             </p>
           </div>
@@ -113,11 +113,11 @@ export const PvssBreakdown: React.FC<PvssBreakdownProps> = ({ pillars }) => {
         {/* Legend */}
         <div className="flex items-center gap-2 flex-wrap">
           <span className="inline-flex items-center gap-1 text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full bg-pink-100 text-pink-700">
-            <Bot className="w-3 h-3" />
+            <Bot className="w-3 h-3" aria-hidden="true" />
             <span>AI Scored (0–25)</span>
           </span>
-          <span className="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 border border-slate-200">
-            <Compass className="w-3 h-3 text-slate-500" />
+          <span className="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-slate-100 text-slate-700 border border-slate-200">
+            <Compass className="w-3 h-3 text-slate-600" aria-hidden="true" />
             <span>Rules of Thumb</span>
           </span>
         </div>
@@ -142,12 +142,16 @@ export const PvssBreakdown: React.FC<PvssBreakdownProps> = ({ pillars }) => {
               {/* Clickable Header Row */}
               <button
                 type="button"
+                id={`pillar-btn-${item.key}`}
+                aria-expanded={isExpanded}
+                aria-controls={`pillar-drawer-${item.key}`}
                 onClick={() => togglePillar(item.key)}
                 className="w-full p-3.5 sm:p-4 text-left flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 transition-colors hover:bg-slate-50/50"
               >
                 <div className="flex items-center gap-3 min-w-0 flex-1">
                   <div
                     className={`w-8 h-8 rounded-xl font-black text-xs flex items-center justify-center shadow-sm ${item.color.letterBg} flex-shrink-0`}
+                    aria-hidden="true"
                   >
                     {item.letter}
                   </div>
@@ -156,7 +160,7 @@ export const PvssBreakdown: React.FC<PvssBreakdownProps> = ({ pillars }) => {
                       <span className="text-xs sm:text-sm font-black text-slate-800">
                         {item.title}
                       </span>
-                      <span className="text-[11px] text-slate-400 font-medium hidden xs:inline">
+                      <span className="text-[11px] text-slate-600 font-medium hidden xs:inline">
                         &bull; {item.sub}
                       </span>
                     </div>
@@ -174,18 +178,18 @@ export const PvssBreakdown: React.FC<PvssBreakdownProps> = ({ pillars }) => {
                 <div className="flex items-center justify-between sm:justify-end gap-3 w-full sm:w-auto flex-shrink-0 pt-1 sm:pt-0 border-t sm:border-t-0 border-[#F4ECE4]">
                   <div className="flex items-center gap-1.5">
                     <span className="text-[9px] font-black uppercase tracking-wider px-1.5 py-0.5 rounded bg-pink-50 text-pink-700 border border-pink-200 flex items-center gap-0.5">
-                      <Bot className="w-2.5 h-2.5" />
+                      <Bot className="w-2.5 h-2.5" aria-hidden="true" />
                       <span>AI</span>
                     </span>
                     <div className="flex items-baseline gap-0.5">
                       <span className="text-sm font-black text-slate-800">
                         {item.data.score}
                       </span>
-                      <span className="text-[11px] font-bold text-slate-400">/25</span>
+                      <span className="text-[11px] font-bold text-slate-600">/25</span>
                     </div>
                   </div>
 
-                  <span className="p-1 rounded-lg bg-slate-100 text-slate-500 hover:text-slate-800 transition-colors">
+                  <span className="p-1 rounded-lg bg-slate-100 text-slate-600 hover:text-slate-800 transition-colors" aria-hidden="true">
                     {isExpanded ? (
                       <ChevronUp className="w-4 h-4" />
                     ) : (
@@ -207,6 +211,9 @@ export const PvssBreakdown: React.FC<PvssBreakdownProps> = ({ pillars }) => {
               <AnimatePresence>
                 {isExpanded && drilldown && (
                   <motion.div
+                    id={`pillar-drawer-${item.key}`}
+                    role="region"
+                    aria-labelledby={`pillar-btn-${item.key}`}
                     initial={{ opacity: 0, height: 0 }}
                     animate={{ opacity: 1, height: 'auto' }}
                     exit={{ opacity: 0, height: 0 }}

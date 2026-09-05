@@ -46,13 +46,13 @@ export const CritiqueList: React.FC<CritiqueListProps> = ({
     <div className="flex flex-col gap-5">
       {/* Visual Legend Explaining AI vs Rules of Thumb */}
       <div className="flex items-center gap-2 text-[10px] font-bold pb-1 border-b border-[#F4ECE4]/80 flex-wrap">
-        <span className="text-slate-400 font-semibold uppercase tracking-wider">Guide:</span>
+        <span className="text-slate-600 font-semibold uppercase tracking-wider">Guide:</span>
         <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-pink-100 text-pink-700">
-          <Bot className="w-3 h-3" />
+          <Bot className="w-3 h-3" aria-hidden="true" />
           <span>AI Custom Analysis (Your Script)</span>
         </span>
-        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 border border-slate-200">
-          <Compass className="w-3 h-3 text-slate-500" />
+        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-slate-100 text-slate-700 border border-slate-200">
+          <Compass className="w-3 h-3 text-slate-600" aria-hidden="true" />
           <span>Universal Rule of Thumb (Industry Standard)</span>
         </span>
       </div>
@@ -61,11 +61,11 @@ export const CritiqueList: React.FC<CritiqueListProps> = ({
       {improvements.length > 0 && (
         <div className="flex flex-col gap-2.5">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-1.5 text-xs font-black text-rose-700 uppercase tracking-wider">
-              <AlertCircle className="w-4 h-4 text-rose-500" />
+            <div className="flex items-center gap-1.5 text-xs font-black text-rose-800 uppercase tracking-wider">
+              <AlertCircle className="w-4 h-4 text-rose-600" aria-hidden="true" />
               <span>Priority Fixes to Reach 85+ (Click to drill down)</span>
             </div>
-            <span className="text-[10px] font-bold text-slate-400">
+            <span className="text-[10px] font-bold text-slate-600">
               {improvements.length} suggestions
             </span>
           </div>
@@ -87,17 +87,20 @@ export const CritiqueList: React.FC<CritiqueListProps> = ({
                   {/* Clickable Header */}
                   <button
                     type="button"
+                    id={`critique-btn-${idx}`}
+                    aria-expanded={isExpanded}
+                    aria-controls={`critique-drawer-${idx}`}
                     onClick={() => toggleExpand(idx)}
                     className="w-full p-3.5 flex items-start justify-between gap-3 text-left transition-colors"
                   >
                     <div className="flex items-start gap-2.5 flex-1 min-w-0">
-                      <span className="w-5 h-5 rounded-full bg-rose-100 text-rose-600 font-black text-[11px] flex items-center justify-center flex-shrink-0 mt-0.5">
+                      <span className="w-5 h-5 rounded-full bg-rose-100 text-rose-700 font-black text-[11px] flex items-center justify-center flex-shrink-0 mt-0.5">
                         {idx + 1}
                       </span>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-1.5 mb-1">
                           <span className="text-[9px] font-black uppercase tracking-wider px-1.5 py-0.2 rounded bg-pink-100 text-pink-700 flex items-center gap-0.5">
-                            <Bot className="w-2.5 h-2.5" />
+                            <Bot className="w-2.5 h-2.5" aria-hidden="true" />
                             <span>AI Finding</span>
                           </span>
                         </div>
@@ -105,15 +108,15 @@ export const CritiqueList: React.FC<CritiqueListProps> = ({
                           {item}
                         </span>
                         {!isExpanded && (
-                          <span className="text-[10px] font-semibold text-rose-600 mt-1 inline-flex items-center gap-1">
-                            <Lightbulb className="w-3 h-3" />
+                          <span className="text-[10px] font-semibold text-rose-700 mt-1 inline-flex items-center gap-1">
+                            <Lightbulb className="w-3 h-3" aria-hidden="true" />
                             <span>Click to view universal rule of thumb & rewrite example &rarr;</span>
                           </span>
                         )}
                       </div>
                     </div>
 
-                    <span className="p-1 rounded-lg bg-slate-100 text-slate-500 hover:text-slate-800 transition-colors flex-shrink-0">
+                    <span className="p-1 rounded-lg bg-slate-100 text-slate-600 hover:text-slate-800 transition-colors flex-shrink-0" aria-hidden="true">
                       {isExpanded ? (
                         <ChevronUp className="w-3.5 h-3.5" />
                       ) : (
@@ -126,6 +129,9 @@ export const CritiqueList: React.FC<CritiqueListProps> = ({
                   <AnimatePresence>
                     {isExpanded && (
                       <motion.div
+                        id={`critique-drawer-${idx}`}
+                        role="region"
+                        aria-labelledby={`critique-btn-${idx}`}
                         initial={{ opacity: 0, height: 0 }}
                         animate={{ opacity: 1, height: 'auto' }}
                         exit={{ opacity: 0, height: 0 }}
@@ -173,27 +179,28 @@ export const CritiqueList: React.FC<CritiqueListProps> = ({
                           <div className="flex items-center justify-between">
                             <div className="flex items-center gap-1.5">
                               <span className="text-[10px] font-black uppercase tracking-wider text-slate-700 flex items-center gap-1">
-                                <Sparkles className="w-3 h-3 text-pink-500" />
+                                <Sparkles className="w-3 h-3 text-pink-600" aria-hidden="true" />
                                 <span>Blueprint Rewrite Formula</span>
                               </span>
-                              <span className="text-[9px] font-bold px-1.5 py-0.2 rounded bg-slate-200/70 text-slate-600">
+                              <span className="text-[9px] font-bold px-1.5 py-0.2 rounded bg-slate-200/70 text-slate-700">
                                 📐 Template
                               </span>
                             </div>
                             <button
                               type="button"
                               onClick={(e) => handleCopyExample(drilldown.rewriteFormula.example, idx, e)}
-                              className="inline-flex items-center gap-1 text-[10px] font-bold text-slate-600 hover:text-pink-600 transition-colors"
+                              aria-label="Copy blueprint rewrite example"
+                              className="inline-flex items-center gap-1 text-[10px] font-bold text-slate-700 hover:text-pink-700 transition-colors"
                               title="Copy rewrite example"
                             >
                               {copiedIndex === idx ? (
                                 <>
-                                  <Check className="w-3 h-3 text-emerald-600" />
-                                  <span className="text-emerald-700 font-black">Copied!</span>
+                                  <Check className="w-3 h-3 text-emerald-700" aria-hidden="true" />
+                                  <span className="text-emerald-800 font-black">Copied!</span>
                                 </>
                               ) : (
                                 <>
-                                  <Copy className="w-3 h-3" />
+                                  <Copy className="w-3 h-3 text-slate-600" aria-hidden="true" />
                                   <span>Copy Example</span>
                                 </>
                               )}

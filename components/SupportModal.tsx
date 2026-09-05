@@ -12,19 +12,27 @@ export const SupportModal: React.FC<SupportModalProps> = ({ isOpen, onClose }) =
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm animate-fade-in">
+    <div 
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm animate-fade-in"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="support-dialog-title"
+    >
       <div className="w-full max-w-md bg-white rounded-3xl border border-[#EFE5DB] shadow-2xl p-6 sm:p-7 flex flex-col gap-5">
         {/* Header */}
         <div className="flex items-center justify-between border-b border-[#F4ECE4] pb-4">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-amber-100 text-amber-700 flex items-center justify-center text-xl shadow-sm">
+            <div 
+              className="w-10 h-10 rounded-2xl bg-amber-100 text-amber-700 flex items-center justify-center text-xl shadow-sm"
+              aria-hidden="true"
+            >
               ☕
             </div>
             <div>
-              <h3 className="font-black text-slate-800 text-base">
+              <h3 id="support-dialog-title" className="font-black text-slate-800 text-base">
                 Support Viral Hook Studio
               </h3>
-              <p className="text-xs text-slate-500 font-medium">
+              <p className="text-xs text-slate-600 font-medium">
                 Free & open for creators everywhere.
               </p>
             </div>
@@ -33,9 +41,10 @@ export const SupportModal: React.FC<SupportModalProps> = ({ isOpen, onClose }) =
           <button
             onClick={onClose}
             type="button"
-            className="p-1.5 rounded-xl text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors"
+            aria-label="Close support dialog"
+            className="p-1.5 rounded-xl text-slate-500 hover:text-slate-800 hover:bg-slate-100 transition-colors"
           >
-            <X className="w-5 h-5" />
+            <X className="w-5 h-5" aria-hidden="true" />
           </button>
         </div>
 
@@ -76,15 +85,15 @@ export const SupportModal: React.FC<SupportModalProps> = ({ isOpen, onClose }) =
               <span className="text-lg">📢</span>
               <div className="text-left">
                 <span className="block font-black text-slate-800">Share with Fellow Creators</span>
-                <span className="text-[11px] font-normal text-slate-500">Copy link to share on X, Discord, or YouTube</span>
+                <span className="text-[11px] font-normal text-slate-600">Copy link to share on X, Discord, or YouTube</span>
               </div>
             </div>
-            <Share2 className="w-4 h-4 text-slate-400 group-hover:text-pink-500 transition-colors" />
+            <Share2 className="w-4 h-4 text-slate-600 group-hover:text-pink-700 transition-colors" aria-hidden="true" />
           </button>
         </div>
 
         <div className="text-center pt-2">
-          <p className="text-[11px] text-slate-400 font-medium">
+          <p className="text-[11px] text-slate-600 font-medium">
             Made with ❤️ for YouTube storytellers & video creators.
           </p>
         </div>

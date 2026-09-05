@@ -166,12 +166,12 @@ export default function HomePage() {
                 <div className="bg-white rounded-3xl border border-[#EFE5DB] shadow-candy-sm overflow-hidden">
                   <div className="border-b border-[#F4ECE4] px-6 py-4 flex items-center justify-between bg-gradient-to-r from-white via-white to-pink-50/30">
                     <div className="flex items-center gap-2">
-                      <span className="text-lg">🍭</span>
-                      <span className="font-black text-sm text-slate-800 tracking-tight">
+                      <span className="text-lg" aria-hidden="true">🍭</span>
+                      <h2 className="font-black text-sm text-slate-800 tracking-tight">
                         The Hype Meter
-                      </span>
+                      </h2>
                     </div>
-                    <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
+                    <span className="text-[11px] font-bold text-slate-600 uppercase tracking-wider">
                       0–100 Scale
                     </span>
                   </div>
@@ -190,12 +190,12 @@ export default function HomePage() {
                 <div className="bg-white rounded-3xl border border-[#EFE5DB] shadow-candy-sm p-5 sm:p-6 flex flex-col gap-4">
                   <div className="flex items-center justify-between border-b border-[#F4ECE4] pb-3">
                     <div className="flex items-center gap-2">
-                      <span className="text-lg">💡</span>
+                      <span className="text-lg" aria-hidden="true">💡</span>
                       <div>
-                        <h3 className="text-sm sm:text-base font-black text-slate-800 tracking-tight">
+                        <h2 className="text-sm sm:text-base font-black text-slate-800 tracking-tight">
                           Director's Actionable Notes
-                        </h3>
-                        <p className="text-[11px] text-slate-400 font-medium">
+                        </h2>
+                        <p className="text-[11px] text-slate-600 font-medium">
                           Click any point to view retention psychology & rewrite formula
                         </p>
                       </div>
@@ -239,12 +239,12 @@ export default function HomePage() {
               <div className="bg-white rounded-3xl border border-[#EFE5DB] shadow-candy-sm overflow-hidden">
                 <div className="border-b border-[#F4ECE4] px-6 py-4 flex items-center justify-between bg-gradient-to-r from-white via-white to-pink-50/30">
                   <div className="flex items-center gap-2">
-                    <span className="text-lg">🍭</span>
-                    <span className="font-black text-sm text-slate-800 tracking-tight">
+                    <span className="text-lg" aria-hidden="true">🍭</span>
+                    <h2 className="font-black text-sm text-slate-800 tracking-tight">
                       The Hype Meter
-                    </span>
+                    </h2>
                   </div>
-                  <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
+                  <span className="text-[11px] font-bold text-slate-600 uppercase tracking-wider">
                     0–100 Scale
                   </span>
                 </div>
@@ -259,20 +259,23 @@ export default function HomePage() {
 
               {/* Welcoming Guidance Card */}
               <div className="bg-white rounded-3xl border border-[#EFE5DB] shadow-candy-sm p-6 flex flex-col items-center text-center gap-3">
-                <div className="w-10 h-10 rounded-2xl bg-pink-50 text-pink-500 flex items-center justify-center text-lg">
+                <div 
+                  className="w-10 h-10 rounded-2xl bg-pink-50 text-pink-700 flex items-center justify-center text-lg"
+                  aria-hidden="true"
+                >
                   ✨
                 </div>
-                <h3 className="font-black text-sm text-slate-800">
+                <h2 className="font-black text-sm text-slate-800">
                   Ready to Test Retention
-                </h3>
-                <p className="text-xs text-slate-500 max-w-xs leading-relaxed">
+                </h2>
+                <p className="text-xs text-slate-700 max-w-xs leading-relaxed">
                   Choose an intro preset on the left or write your own, then click{' '}
                   <strong>"Test Hook"</strong> to evaluate against the PVSS framework.
                 </p>
                 <button
                   onClick={() => setIsGuideOpen(true)}
                   type="button"
-                  className="text-xs font-bold text-pink-600 hover:underline"
+                  className="text-xs font-bold text-pink-700 hover:text-pink-800 hover:underline"
                 >
                   Read the 15-second PVSS guide &rarr;
                 </button>
@@ -302,10 +305,10 @@ export default function HomePage() {
 
       {/* Clean Creator Footer */}
       <footer className="w-full border-t border-[#F0E6DC] bg-white/70 py-6 px-4 sm:px-8 mt-auto">
-        <div className="mx-auto max-w-7xl flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-500 font-medium">
+        <div className="mx-auto max-w-7xl flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-600 font-medium">
           <div className="flex items-center gap-2">
-            <span className="font-bold text-slate-700">Viral Hook Studio</span>
-            <span>&bull;</span>
+            <span className="font-bold text-slate-800">Viral Hook Studio</span>
+            <span aria-hidden="true">&bull;</span>
             <span>15-second intro & retention diagnostics for YouTube creators</span>
           </div>
 
@@ -313,18 +316,18 @@ export default function HomePage() {
             <button
               onClick={() => setIsGuideOpen(true)}
               type="button"
-              className="hover:text-pink-600 transition-colors flex items-center gap-1"
+              className="hover:text-pink-700 transition-colors flex items-center gap-1 text-slate-600"
             >
-              <BookOpen className="w-3.5 h-3.5" />
+              <BookOpen className="w-3.5 h-3.5" aria-hidden="true" />
               <span>PVSS Guide</span>
             </button>
             <a
               href="https://buymeacoffee.com/geraltofrivia"
               target="_blank"
-              rel="noreferrer"
-              className="hover:text-amber-700 font-bold text-amber-800 transition-colors flex items-center gap-1"
+              rel="noopener noreferrer"
+              className="hover:text-amber-900 font-bold text-amber-800 transition-colors flex items-center gap-1"
             >
-              <Coffee className="w-3.5 h-3.5" />
+              <Coffee className="w-3.5 h-3.5" aria-hidden="true" />
               <span>Buy Me a Coffee</span>
             </a>
           </div>
