@@ -11,6 +11,8 @@ import {
   Check,
   TrendingUp,
   Lightbulb,
+  Bot,
+  Compass,
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { getDrilldownForPoint, PointDrilldown } from '@/lib/drilldowns';
@@ -24,8 +26,7 @@ export const CritiqueList: React.FC<CritiqueListProps> = ({
   strengths,
   improvements,
 }) => {
-  // Track which improvement index is currently expanded for deep dive
-  const [expandedIndex, setExpandedIndex] = useState<number | null>(0); // First item expanded by default
+  const [expandedIndex, setExpandedIndex] = useState<number | null>(0);
   const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
 
   const toggleExpand = (index: number) => {
@@ -43,16 +44,29 @@ export const CritiqueList: React.FC<CritiqueListProps> = ({
 
   return (
     <div className="flex flex-col gap-5">
+      {/* Visual Legend Explaining AI vs Rules of Thumb */}
+      <div className="flex items-center gap-2 text-[10px] font-bold pb-1 border-b border-[#F4ECE4]/80 flex-wrap">
+        <span className="text-slate-400 font-semibold uppercase tracking-wider">Guide:</span>
+        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-pink-100 text-pink-700">
+          <Bot className="w-3 h-3" />
+          <span>AI Custom Analysis (Your Script)</span>
+        </span>
+        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 border border-slate-200">
+          <Compass className="w-3 h-3 text-slate-500" />
+          <span>Universal Rule of Thumb (Industry Standard)</span>
+        </span>
+      </div>
+
       {/* 1. HIGH-PRIORITY: Actionable Polish & Drilldowns */}
       {improvements.length > 0 && (
         <div className="flex flex-col gap-2.5">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-1.5 text-xs font-black text-rose-700 uppercase tracking-wider">
               <AlertCircle className="w-4 h-4 text-rose-500" />
-              <span>Priority Fixes to Reach 85+ (Click any to drill down)</span>
+              <span>Priority Fixes to Reach 85+ (Click to drill down)</span>
             </div>
             <span className="text-[10px] font-bold text-slate-400">
-              {improvements.length} actionables
+              {improvements.length} suggestions
             </span>
           </div>
 
@@ -81,13 +95,19 @@ export const CritiqueList: React.FC<CritiqueListProps> = ({
                         {idx + 1}
                       </span>
                       <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-1.5 mb-1">
+                          <span className="text-[9px] font-black uppercase tracking-wider px-1.5 py-0.2 rounded bg-pink-100 text-pink-700 flex items-center gap-0.5">
+                            <Bot className="w-2.5 h-2.5" />
+                            <span>AI Finding</span>
+                          </span>
+                        </div>
                         <span className="text-xs font-bold text-slate-800 leading-snug block">
                           {item}
                         </span>
                         {!isExpanded && (
                           <span className="text-[10px] font-semibold text-rose-600 mt-1 inline-flex items-center gap-1">
                             <Lightbulb className="w-3 h-3" />
-                            <span>Click to see retention formula & rewrite example &rarr;</span>
+                            <span>Click to view universal rule of thumb & rewrite example &rarr;</span>
                           </span>
                         )}
                       </div>
@@ -116,9 +136,14 @@ export const CritiqueList: React.FC<CritiqueListProps> = ({
                         <div className="flex items-start gap-2 text-xs bg-rose-50/60 border border-rose-100 rounded-xl p-2.5">
                           <span className="text-sm">⚠️</span>
                           <div>
-                            <span className="font-bold text-rose-900 block text-[11px] uppercase tracking-wider">
-                              Why Viewers Drop Off:
-                            </span>
+                            <div className="flex items-center gap-1.5 mb-0.5">
+                              <span className="font-black text-rose-900 text-[10px] uppercase tracking-wider">
+                                Why Viewers Drop Off
+                              </span>
+                              <span className="text-[9px] font-bold px-1.5 py-0.2 rounded bg-white text-rose-700 border border-rose-200">
+                                📐 Rule of Thumb
+                              </span>
+                            </div>
                             <p className="text-[11px] text-rose-800 font-medium leading-relaxed">
                               {drilldown.retentionRisk}
                             </p>
@@ -129,9 +154,14 @@ export const CritiqueList: React.FC<CritiqueListProps> = ({
                         <div className="flex items-start gap-2 text-xs bg-purple-50/60 border border-purple-100 rounded-xl p-2.5">
                           <span className="text-sm">💡</span>
                           <div>
-                            <span className="font-bold text-purple-900 block text-[11px] uppercase tracking-wider">
-                              The Creator Rule:
-                            </span>
+                            <div className="flex items-center gap-1.5 mb-0.5">
+                              <span className="font-black text-purple-900 text-[10px] uppercase tracking-wider">
+                                The Proven YouTube Rule
+                              </span>
+                              <span className="text-[9px] font-bold px-1.5 py-0.2 rounded bg-white text-purple-700 border border-purple-200">
+                                📐 Industry Standard
+                              </span>
+                            </div>
                             <p className="text-[11px] text-purple-800 font-medium leading-relaxed">
                               {drilldown.creatorRule}
                             </p>
@@ -141,10 +171,15 @@ export const CritiqueList: React.FC<CritiqueListProps> = ({
                         {/* Rewrite Formula & Example */}
                         <div className="bg-[#FAF8F5] border border-[#E8DDD0] rounded-xl p-3 flex flex-col gap-2">
                           <div className="flex items-center justify-between">
-                            <span className="text-[10px] font-black uppercase tracking-wider text-slate-500 flex items-center gap-1">
-                              <Sparkles className="w-3 h-3 text-pink-500" />
-                              <span>Proven YouTube Rewrite Formula</span>
-                            </span>
+                            <div className="flex items-center gap-1.5">
+                              <span className="text-[10px] font-black uppercase tracking-wider text-slate-700 flex items-center gap-1">
+                                <Sparkles className="w-3 h-3 text-pink-500" />
+                                <span>Blueprint Rewrite Formula</span>
+                              </span>
+                              <span className="text-[9px] font-bold px-1.5 py-0.2 rounded bg-slate-200/70 text-slate-600">
+                                📐 Template
+                              </span>
+                            </div>
                             <button
                               type="button"
                               onClick={(e) => handleCopyExample(drilldown.rewriteFormula.example, idx, e)}
@@ -187,10 +222,17 @@ export const CritiqueList: React.FC<CritiqueListProps> = ({
       {/* 2. Retention Multipliers (Strengths) */}
       {strengths.length > 0 && (
         <div className="flex flex-col gap-2">
-          <div className="flex items-center gap-1.5 text-xs font-black text-emerald-700 uppercase tracking-wider">
-            <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-            <span>Validated Retention Multipliers</span>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-1.5 text-xs font-black text-emerald-700 uppercase tracking-wider">
+              <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+              <span>Validated Retention Multipliers</span>
+            </div>
+            <span className="text-[9px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 flex items-center gap-1">
+              <Bot className="w-2.5 h-2.5" />
+              <span>AI Detected</span>
+            </span>
           </div>
+
           <ul className="flex flex-col gap-1.5">
             {strengths.map((item, idx) => (
               <li
@@ -200,7 +242,9 @@ export const CritiqueList: React.FC<CritiqueListProps> = ({
                 <div className="w-5 h-5 rounded-full bg-emerald-100 text-emerald-700 font-black text-[11px] flex items-center justify-center flex-shrink-0 mt-0.5">
                   ✓
                 </div>
-                <span>{item}</span>
+                <div className="flex-1">
+                  <span>{item}</span>
+                </div>
               </li>
             ))}
           </ul>

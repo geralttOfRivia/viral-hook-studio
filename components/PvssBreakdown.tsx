@@ -2,7 +2,18 @@
 
 import React, { useState } from 'react';
 import { PvssEvaluationResult, PvssPillarScore } from '@/lib/types';
-import { Target, ShieldCheck, Zap, AlertTriangle, Lightbulb, ChevronDown, ChevronUp, Sparkles } from 'lucide-react';
+import {
+  Target,
+  ShieldCheck,
+  Zap,
+  AlertTriangle,
+  Lightbulb,
+  ChevronDown,
+  ChevronUp,
+  Sparkles,
+  Bot,
+  Compass,
+} from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { PVSS_PILLAR_DRILLDOWNS } from '@/lib/drilldowns';
 
@@ -86,7 +97,7 @@ export const PvssBreakdown: React.FC<PvssBreakdownProps> = ({ pillars }) => {
 
   return (
     <div className="flex flex-col gap-3">
-      <div className="flex items-center justify-between border-b border-[#F4ECE4] pb-3">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-[#F4ECE4] pb-3">
         <div className="flex items-center gap-2">
           <span className="text-lg">📊</span>
           <div>
@@ -94,16 +105,25 @@ export const PvssBreakdown: React.FC<PvssBreakdownProps> = ({ pillars }) => {
               PVSS Framework Breakdown
             </h3>
             <p className="text-[11px] text-slate-400 font-medium">
-              Click any pillar to see retention benchmarks & perfection checklist
+              Click any pillar to view rules of thumb, benchmarks & checklists
             </p>
           </div>
         </div>
-        <span className="text-[11px] font-bold text-slate-400">
-          Max 25 pts each
-        </span>
+
+        {/* Legend */}
+        <div className="flex items-center gap-2 flex-wrap">
+          <span className="inline-flex items-center gap-1 text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full bg-pink-100 text-pink-700">
+            <Bot className="w-3 h-3" />
+            <span>AI Scored (0–25)</span>
+          </span>
+          <span className="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 border border-slate-200">
+            <Compass className="w-3 h-3 text-slate-500" />
+            <span>Rules of Thumb</span>
+          </span>
+        </div>
       </div>
 
-      {/* Clean Single-Column Accordion (eliminates 2-column grid height stretching glitch) */}
+      {/* Clean Single-Column Accordion */}
       <div className="flex flex-col gap-2.5">
         {pillarList.map((item) => {
           const scorePercent = (item.data.score / item.data.weightMax) * 100;
@@ -152,11 +172,17 @@ export const PvssBreakdown: React.FC<PvssBreakdownProps> = ({ pillars }) => {
                 </div>
 
                 <div className="flex items-center justify-between sm:justify-end gap-3 w-full sm:w-auto flex-shrink-0 pt-1 sm:pt-0 border-t sm:border-t-0 border-[#F4ECE4]">
-                  <div className="flex items-baseline gap-1">
-                    <span className="text-sm font-black text-slate-800">
-                      {item.data.score}
+                  <div className="flex items-center gap-1.5">
+                    <span className="text-[9px] font-black uppercase tracking-wider px-1.5 py-0.5 rounded bg-pink-50 text-pink-700 border border-pink-200 flex items-center gap-0.5">
+                      <Bot className="w-2.5 h-2.5" />
+                      <span>AI</span>
                     </span>
-                    <span className="text-[11px] font-bold text-slate-400">/25</span>
+                    <div className="flex items-baseline gap-0.5">
+                      <span className="text-sm font-black text-slate-800">
+                        {item.data.score}
+                      </span>
+                      <span className="text-[11px] font-bold text-slate-400">/25</span>
+                    </div>
                   </div>
 
                   <span className="p-1 rounded-lg bg-slate-100 text-slate-500 hover:text-slate-800 transition-colors">
@@ -169,11 +195,12 @@ export const PvssBreakdown: React.FC<PvssBreakdownProps> = ({ pillars }) => {
                 </div>
               </button>
 
-              {/* Always-visible Short Diagnosis */}
-              <div className="px-3.5 sm:px-4 pb-3 pt-0">
-                <p className="text-[11px] text-slate-600 font-medium leading-relaxed">
-                  {item.data.critique}
-                </p>
+              {/* Always-visible AI Diagnosis for User's Script */}
+              <div className="px-3.5 sm:px-4 pb-3 pt-0 flex items-start gap-1.5 text-[11px] text-slate-600 font-medium leading-relaxed">
+                <span className="text-[9px] font-black uppercase tracking-wider px-1.5 py-0.2 rounded bg-pink-100 text-pink-800 flex-shrink-0 mt-0.5">
+                  AI Finding:
+                </span>
+                <span>{item.data.critique}</span>
               </div>
 
               {/* Expandable Pillar Drilldown Drawer */}
@@ -186,34 +213,50 @@ export const PvssBreakdown: React.FC<PvssBreakdownProps> = ({ pillars }) => {
                     transition={{ duration: 0.2 }}
                     className="border-t border-[#F0E6DC] bg-[#FAF8F5] p-3.5 sm:p-4 flex flex-col gap-3 text-xs"
                   >
-                    {/* YouTube Benchmark */}
+                    {/* YouTube Benchmark (Rule of Thumb) */}
                     <div className="bg-white p-3 rounded-xl border border-[#E8DDD0] shadow-2xs">
-                      <span className="text-[10px] font-black uppercase tracking-wider text-emerald-700 block mb-0.5">
-                        📈 YouTube Retention Benchmark
-                      </span>
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="text-[10px] font-black uppercase tracking-wider text-emerald-700 block">
+                          📈 YouTube Retention Benchmark
+                        </span>
+                        <span className="text-[9px] font-bold px-1.5 py-0.2 rounded bg-slate-100 text-slate-600 border border-slate-200">
+                          📐 Rule of Thumb
+                        </span>
+                      </div>
                       <p className="text-[11px] text-slate-700 font-medium leading-relaxed">
                         {drilldown.benchmark}
                       </p>
                     </div>
 
-                    {/* Pro Tip from Evaluation */}
+                    {/* AI Recommendation Tailored to Script */}
                     {item.data.tip && (
-                      <div className="bg-amber-50/80 p-3 rounded-xl border border-amber-200">
-                        <span className="text-[10px] font-black uppercase tracking-wider text-amber-800 block mb-0.5 flex items-center gap-1">
-                          <Lightbulb className="w-3.5 h-3.5 text-amber-600" />
-                          <span>Director's Recommendation</span>
-                        </span>
-                        <p className="text-[11px] text-amber-900 font-medium leading-relaxed">
+                      <div className="bg-rose-50/70 p-3 rounded-xl border border-rose-200">
+                        <div className="flex items-center justify-between mb-1">
+                          <span className="text-[10px] font-black uppercase tracking-wider text-rose-900 block flex items-center gap-1">
+                            <Lightbulb className="w-3.5 h-3.5 text-rose-600" />
+                            <span>Script-Specific Recommendation</span>
+                          </span>
+                          <span className="text-[9px] font-black uppercase tracking-wider px-1.5 py-0.2 rounded bg-pink-200/80 text-pink-900 flex items-center gap-0.5">
+                            <Bot className="w-2.5 h-2.5" />
+                            <span>AI Tailored</span>
+                          </span>
+                        </div>
+                        <p className="text-[11px] text-rose-900 font-medium leading-relaxed">
                           {item.data.tip}
                         </p>
                       </div>
                     )}
 
-                    {/* Perfection Checklist */}
+                    {/* Perfection Checklist (Rule of Thumb) */}
                     <div className="bg-white p-3 rounded-xl border border-[#E8DDD0]">
-                      <span className="text-[10px] font-black uppercase tracking-wider text-slate-500 block mb-1.5">
-                        🎯 25/25 Checklist for {item.title}:
-                      </span>
+                      <div className="flex items-center justify-between mb-1.5">
+                        <span className="text-[10px] font-black uppercase tracking-wider text-slate-500 block">
+                          🎯 25/25 Checklist for {item.title}:
+                        </span>
+                        <span className="text-[9px] font-bold px-1.5 py-0.2 rounded bg-slate-100 text-slate-600 border border-slate-200">
+                          📐 Standard Checklist
+                        </span>
+                      </div>
                       <ul className="flex flex-col gap-1.5">
                         {drilldown.perfectionChecklist.map((check, cIdx) => (
                           <li
@@ -227,13 +270,18 @@ export const PvssBreakdown: React.FC<PvssBreakdownProps> = ({ pillars }) => {
                       </ul>
                     </div>
 
-                    {/* Pro Formula */}
+                    {/* Pro Formula (Rule of Thumb) */}
                     <div className="bg-purple-50/70 p-3 rounded-xl border border-purple-200">
-                      <span className="text-[10px] font-black uppercase tracking-wider text-purple-800 block mb-0.5 flex items-center gap-1">
-                        <Sparkles className="w-3.5 h-3.5 text-purple-600" />
-                        <span>Winning Formula</span>
-                      </span>
-                      <p className="text-[11px] font-mono text-purple-900 font-medium">
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="text-[10px] font-black uppercase tracking-wider text-purple-800 block flex items-center gap-1">
+                          <Sparkles className="w-3.5 h-3.5 text-purple-600" />
+                          <span>Winning Hook Formula</span>
+                        </span>
+                        <span className="text-[9px] font-bold px-1.5 py-0.2 rounded bg-slate-100 text-slate-600 border border-slate-200">
+                          📐 Industry Pattern
+                        </span>
+                      </div>
+                      <p className="text-[11px] font-mono text-purple-900 font-medium leading-relaxed">
                         {drilldown.proFormula}
                       </p>
                     </div>
