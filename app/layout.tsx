@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { Analytics } from '@vercel/analytics/next';
 import './globals.css';
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://viral-hook-studio.vercel.app';
@@ -113,6 +114,7 @@ export default function RootLayout({
         <main className="flex-1">
           {children}
         </main>
+        <Analytics />
       </body>
     </html>
   );
