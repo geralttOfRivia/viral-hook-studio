@@ -1,14 +1,19 @@
 'use client';
 
 import React from 'react';
-import { BookOpen, Coffee, Sparkles } from 'lucide-react';
+import { BookOpen, Coffee, Sparkles, MessageSquarePlus } from 'lucide-react';
 
 interface HeaderProps {
   onOpenGuide: () => void;
   onOpenSupport: () => void;
+  onOpenFeedback: () => void;
 }
 
-export const Header: React.FC<HeaderProps> = ({ onOpenGuide, onOpenSupport }) => {
+export const Header: React.FC<HeaderProps> = ({
+  onOpenGuide,
+  onOpenSupport,
+  onOpenFeedback,
+}) => {
   return (
     <header className="sticky top-0 z-40 w-full border-b border-[#F0E6DC] bg-[#FAF8F5]/90 backdrop-blur-md px-4 sm:px-8 py-3 flex items-center justify-between">
       {/* Logo */}
@@ -44,9 +49,20 @@ export const Header: React.FC<HeaderProps> = ({ onOpenGuide, onOpenSupport }) =>
           <span>How It Works</span>
         </button>
 
+        {/* Feedback / Suggest Ideas Button */}
+        <button
+          onClick={onOpenFeedback}
+          type="button"
+          aria-label="Suggest ideas or improvements"
+          className="inline-flex items-center gap-1.5 px-3 py-2 rounded-2xl text-xs font-bold bg-pink-50 hover:bg-pink-100 text-pink-700 hover:text-pink-800 border border-pink-200 shadow-xs transition-all"
+        >
+          <MessageSquarePlus className="w-3.5 h-3.5 text-pink-600" aria-hidden="true" />
+          <span>Feedback</span>
+        </button>
+
         {/* Follow on X Link */}
         <a
-          href={process.env.NEXT_PUBLIC_TWITTER_URL || "https://x.com"}
+          href={process.env.NEXT_PUBLIC_TWITTER_URL || "https://x.com/GeraltRiviaCode"}
           target="_blank"
           rel="noopener noreferrer"
           aria-label="Follow Viral Hook Studio on X"

@@ -73,13 +73,14 @@ export const HypeMeterRing: React.FC<HypeMeterRingProps> = ({
 
   const handleShareToTwitter = () => {
     const siteUrl = 'https://viral-hook-studio.vercel.app';
+    const creatorHandle = process.env.NEXT_PUBLIC_TWITTER_HANDLE || '@GeraltRiviaCode';
     let tweetText = '';
     if (score >= 85) {
-      tweetText = `Just scored ${score}/100 (${grade}) on my 15-second YouTube intro script! 🍭🔥\n\nTested against the PVSS framework before filming. Check your retention score:`;
+      tweetText = `Just scored ${score}/100 (${grade}) on my 15-second YouTube intro script! 🍭🔥\n\nTested with ${creatorHandle}'s Viral Hook Studio before filming. Check your retention score:`;
     } else if (score >= 51) {
-      tweetText = `Diagnosed my YouTube video intro on Viral Hook Studio — scored ${score}/100 (${grade})! 🍭\n\nOptimizing my first 15 seconds before filming. Test yours:`;
+      tweetText = `Diagnosed my YouTube video intro on Viral Hook Studio (by ${creatorHandle}) — scored ${score}/100 (${grade})! 🍭\n\nFixing my first 15 seconds before filming. Test yours:`;
     } else {
-      tweetText = `Testing my YouTube video intro on Viral Hook Studio to eliminate drop-offs! 🍭\n\nCheck your intro script against the PVSS framework:`;
+      tweetText = `Testing my YouTube video intro on Viral Hook Studio (by ${creatorHandle}) to fix retention drop-offs! 🍭\n\nCheck your intro script against the PVSS framework:`;
     }
     const shareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}&url=${encodeURIComponent(siteUrl)}`;
     window.open(shareUrl, '_blank', 'noopener,noreferrer');

@@ -66,7 +66,7 @@ export const metadata: Metadata = {
     description:
       'Score your YouTube video hook before you film. Maximize audience retention with the PVSS Framework.',
     images: ['/og-image.png'],
-    creator: '@viralhookstudio',
+    creator: '@GeraltRiviaCode',
   },
   alternates: {
     canonical: siteUrl,

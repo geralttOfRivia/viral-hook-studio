@@ -12,11 +12,12 @@ import { AdBanner } from '@/components/AdBanner';
 import { SeoFaqSection } from '@/components/SeoFaqSection';
 import { HowToUseModal } from '@/components/HowToUseModal';
 import { SupportModal } from '@/components/SupportModal';
+import { FeedbackModal } from '@/components/FeedbackModal';
 import { PRESET_HOOKS } from '@/lib/presets';
 import { PvssEvaluationResult, PacingMetrics } from '@/lib/types';
 import { calculatePacing } from '@/lib/evaluator';
 import { getDailyUsage, incrementDailyUsage, DailyUsageState } from '@/lib/usageLimit';
-import { AlertCircle, Coffee, BookOpen } from 'lucide-react';
+import { AlertCircle, Coffee, BookOpen, MessageSquarePlus } from 'lucide-react';
 
 export default function HomePage() {
   const [script, setScript] = useState<string>('');
@@ -36,6 +37,7 @@ export default function HomePage() {
   // Modals state
   const [isGuideOpen, setIsGuideOpen] = useState<boolean>(false);
   const [isSupportOpen, setIsSupportOpen] = useState<boolean>(false);
+  const [isFeedbackOpen, setIsFeedbackOpen] = useState<boolean>(false);
 
   // Live client-side pacing metrics calculated on keystroke
   const [pacing, setPacing] = useState<PacingMetrics>(() => calculatePacing(''));
@@ -113,6 +115,7 @@ export default function HomePage() {
       <Header
         onOpenGuide={() => setIsGuideOpen(true)}
         onOpenSupport={() => setIsSupportOpen(true)}
+        onOpenFeedback={() => setIsFeedbackOpen(true)}
       />
 
       {/* Main Studio Body */}
@@ -312,7 +315,7 @@ export default function HomePage() {
             <span>15-second intro & retention diagnostics for YouTube creators</span>
           </div>
 
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-4 flex-wrap">
             <button
               onClick={() => setIsGuideOpen(true)}
               type="button"
@@ -321,8 +324,16 @@ export default function HomePage() {
               <BookOpen className="w-3.5 h-3.5" aria-hidden="true" />
               <span>PVSS Guide</span>
             </button>
+            <button
+              onClick={() => setIsFeedbackOpen(true)}
+              type="button"
+              className="hover:text-pink-700 transition-colors flex items-center gap-1 text-slate-600 font-semibold"
+            >
+              <MessageSquarePlus className="w-3.5 h-3.5 text-pink-600" aria-hidden="true" />
+              <span>Feedback & Ideas</span>
+            </button>
             <a
-              href={process.env.NEXT_PUBLIC_TWITTER_URL || "https://x.com"}
+              href={process.env.NEXT_PUBLIC_TWITTER_URL || "https://x.com/GeraltRiviaCode"}
               target="_blank"
               rel="noopener noreferrer"
               className="hover:text-black font-semibold text-slate-600 transition-colors flex items-center gap-1.5"
@@ -345,6 +356,17 @@ export default function HomePage() {
         </div>
       </footer>
 
+      {/* Floating Quick Feedback Pill (Bottom-Right) */}
+      <button
+        onClick={() => setIsFeedbackOpen(true)}
+        type="button"
+        aria-label="Suggest an improvement or share ideas"
+        className="fixed bottom-5 right-5 z-40 px-3.5 py-2 rounded-full text-xs font-bold bg-white/95 hover:bg-pink-50 text-slate-800 hover:text-pink-700 border border-[#E8DDD0] hover:border-pink-300 shadow-md hover:shadow-lg backdrop-blur-md flex items-center gap-1.5 transition-all hover:scale-105 active:scale-95 group"
+      >
+        <MessageSquarePlus className="w-3.5 h-3.5 text-pink-600 group-hover:scale-110 transition-transform" aria-hidden="true" />
+        <span>Ideas & Feedback</span>
+      </button>
+
       {/* Modals */}
       <HowToUseModal
         isOpen={isGuideOpen}
@@ -353,6 +375,10 @@ export default function HomePage() {
       <SupportModal
         isOpen={isSupportOpen}
         onClose={() => setIsSupportOpen(false)}
+      />
+      <FeedbackModal
+        isOpen={isFeedbackOpen}
+        onClose={() => setIsFeedbackOpen(false)}
       />
     </div>
   );
