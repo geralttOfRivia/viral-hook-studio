@@ -1,9 +1,9 @@
 'use client';
 
-import React, { useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion, useSpring, useTransform } from 'framer-motion';
 import confetti from 'canvas-confetti';
-import { Sparkles, Trophy, Zap, AlertCircle } from 'lucide-react';
+import { Sparkles, Trophy, Zap, AlertCircle, Check, Copy } from 'lucide-react';
 
 interface HypeMeterRingProps {
   score: number;
@@ -19,6 +19,7 @@ export const HypeMeterRing: React.FC<HypeMeterRingProps> = ({
   isLoading = false,
 }) => {
   const lastScoreRef = useRef<number>(score);
+  const [isCopied, setIsCopied] = useState<boolean>(false);
 
   // Spring animation for the score value
   const springScore = useSpring(0, {
@@ -67,6 +68,32 @@ export const HypeMeterRing: React.FC<HypeMeterRingProps> = ({
       }, 150);
     } catch (e) {
       console.log('Confetti error:', e);
+    }
+  };
+
+  const handleShareToTwitter = () => {
+    const siteUrl = 'https://viral-hook-studio.vercel.app';
+    let tweetText = '';
+    if (score >= 85) {
+      tweetText = `Just scored ${score}/100 (${grade}) on my 15-second YouTube intro script! 🍭🔥\n\nTested against the PVSS framework before filming. Check your retention score:`;
+    } else if (score >= 51) {
+      tweetText = `Diagnosed my YouTube video intro on Viral Hook Studio — scored ${score}/100 (${grade})! 🍭\n\nOptimizing my first 15 seconds before filming. Test yours:`;
+    } else {
+      tweetText = `Testing my YouTube video intro on Viral Hook Studio to eliminate drop-offs! 🍭\n\nCheck your intro script against the PVSS framework:`;
+    }
+    const shareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}&url=${encodeURIComponent(siteUrl)}`;
+    window.open(shareUrl, '_blank', 'noopener,noreferrer');
+  };
+
+  const handleCopyScorecard = async () => {
+    const siteUrl = 'https://viral-hook-studio.vercel.app';
+    const text = `🍭 Viral Hook Studio Scorecard\n🎯 Retention Score: ${score}/100 (${grade})\n💡 Verdict: ${verdict}\n👉 Test your 15s intro: ${siteUrl}`;
+    try {
+      await navigator.clipboard.writeText(text);
+      setIsCopied(true);
+      setTimeout(() => setIsCopied(false), 2200);
+    } catch (err) {
+      console.error('Failed to copy', err);
     }
   };
 
@@ -315,17 +342,57 @@ export const HypeMeterRing: React.FC<HypeMeterRingProps> = ({
         {verdict}
       </p>
 
-      {/* Manual Confetti trigger button when pink */}
-      {isPink && (
-        <button
-          onClick={triggerCandyConfetti}
-          type="button"
-          aria-label="Shoot celebration confetti again"
-          className="mt-3 inline-flex items-center gap-1.5 text-xs font-bold text-pink-700 hover:text-pink-800 bg-pink-100/80 hover:bg-pink-100 px-3 py-1 rounded-full transition-colors"
-        >
-          <Sparkles className="w-3.5 h-3.5" aria-hidden="true" />
-          <span>Shoot Confetti Again</span>
-        </button>
+      {/* Social Sharing & Action Bar (when evaluated) */}
+      {score > 0 && !isLoading && (
+        <div className="w-full mt-4 pt-4 border-t border-[#F4ECE4] flex flex-col gap-2.5">
+          <div className="flex items-center gap-2">
+            {/* 1-Click Share to X */}
+            <button
+              onClick={handleShareToTwitter}
+              type="button"
+              aria-label="Share hook score on X (Twitter)"
+              className="flex-1 inline-flex items-center justify-center gap-2 px-3.5 py-2.5 rounded-xl text-xs font-black bg-black text-white hover:bg-slate-800 transition-all shadow-sm hover:shadow active:scale-[0.98]"
+            >
+              <svg className="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+              </svg>
+              <span>Share Score to 𝕏</span>
+            </button>
+
+            {/* Copy Scorecard Button */}
+            <button
+              onClick={handleCopyScorecard}
+              type="button"
+              aria-label="Copy scorecard to clipboard"
+              className="inline-flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-xl text-xs font-bold bg-white text-slate-700 hover:text-slate-900 border border-[#E8DDD0] hover:border-slate-400 hover:bg-slate-50 transition-all active:scale-[0.98]"
+            >
+              {isCopied ? (
+                <>
+                  <Check className="w-3.5 h-3.5 text-emerald-600" aria-hidden="true" />
+                  <span className="text-emerald-700 font-extrabold">Copied!</span>
+                </>
+              ) : (
+                <>
+                  <Copy className="w-3.5 h-3.5 text-slate-500" aria-hidden="true" />
+                  <span>Copy</span>
+                </>
+              )}
+            </button>
+          </div>
+
+          {/* Celebration Confetti button when score is viral tier */}
+          {isPink && (
+            <button
+              onClick={triggerCandyConfetti}
+              type="button"
+              aria-label="Shoot celebration confetti again"
+              className="w-full inline-flex items-center justify-center gap-1.5 text-xs font-bold text-pink-700 hover:text-pink-800 bg-pink-100/80 hover:bg-pink-100 py-1.5 rounded-xl transition-colors"
+            >
+              <Sparkles className="w-3.5 h-3.5" aria-hidden="true" />
+              <span>Shoot Confetti Again 🎉</span>
+            </button>
+          )}
+        </div>
       )}
     </div>
   );
